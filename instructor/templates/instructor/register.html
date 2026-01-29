@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Instructor Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+        }
+        .card {
+            max-width: 500px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        h2 {
+            margin-bottom: 10px;
+        }
+        label {
+            display: block;
+            margin-top: 12px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 6px;
+        }
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 10px;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #1558b0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Instructor Registration</h2>
+    <p>Please register using your official email address.</p>
+	{% if form.errors %}
+		<div style="color:red; margin-bottom:10px;">
+			{{ form.errors }}
+		</div>
+	{% endif %}
+    <form method="post">
+        {% csrf_token %}
+
+        {{ form.non_field_errors }}
+
+        <label>Name</label>
+        {{ form.name }}
+
+        <label>Email</label>
+        {{ form.email }}
+
+        <label>Department</label>
+        {{ form.department }}
+
+        <label>Short Introduction (optional)</label>
+        {{ form.short_intro }}
+
+        <button type="submit">Register & Verify Email</button>
+    </form>
+</div>
+
+</body>
+</html>

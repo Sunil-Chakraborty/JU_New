@@ -1,0 +1,24 @@
+<h2>Instructor Dashboard</h2>
+
+<a href="/instructor/session/create/">➕ Create New Session</a>
+
+<h3>Active Sessions</h3>
+<ul>
+  {% for s in active_sessions %}
+    <li>
+      {{ s.title }}
+      <a href="/instructor/session/{{ s.session_id }}/manage/">Manage</a>
+    </li>
+  {% empty %}
+    <li>No active sessions</li>
+  {% endfor %}
+</ul>
+
+<h3>Closed Sessions</h3>
+<ul>
+  {% for s in closed_sessions %}
+    <li>{{ s.title }}</li>
+  {% empty %}
+    <li>No closed sessions</li>
+  {% endfor %}
+</ul>

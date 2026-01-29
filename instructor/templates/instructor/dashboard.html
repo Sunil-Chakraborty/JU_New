@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Instructor Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .actions a,
+        .actions button {
+            margin-left: 10px;
+            padding: 8px 14px;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .actions a {
+            background-color: #007bff;
+            color: white;
+        }
+        .actions button {
+            background-color: #dc3545;
+            color: white;
+        }
+        .welcome {
+            margin-top: 30px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    {% if user.is_authenticated %}
+
+        <div class="header">
+            <h2>Welcome, {{ user.email }}</h2>
+
+            <div class="actions">
+                <!-- Change Password -->
+                <a href="{% url 'instructor:change_password' %}">
+                    Change Password
+                </a>
+
+                <!-- Logout -->
+                <form method="post" action="{% url 'instructor:logout' %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Logout</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="welcome">
+            <p>You have successfully logged in to the Instructor Portal.</p>
+        </div>
+
+    {% else %}
+        <p>You are not authorized to view this page.</p>
+    {% endif %}
+</div>
+
+</body>
+</html>

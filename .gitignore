@@ -1,0 +1,40 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+
+# =========================
+# Django
+# =========================
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Media & Static (optional – adjust as needed)
+media/
+staticfiles/
+
+# Migrations (optional - ignore only if you recreate migrations)
+# */migrations/
+# !*/migrations/__init__.py
+
+# =========================
+# Environment Variables
+# =========================
+.env
+.env.*
+*.env
+
+
+on.bat
+off.bat
+srv.bat
