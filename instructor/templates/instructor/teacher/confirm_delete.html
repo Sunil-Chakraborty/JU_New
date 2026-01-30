@@ -1,0 +1,21 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+ 
+<div class="card">
+    <h3>Confirm Deletion</h3>
+
+    <p style="text-align:center; color:#555;">
+        Are you sure you want to permanently delete your teacher profile?
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+            <a href="{% url 'instructor:teacher_detail' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

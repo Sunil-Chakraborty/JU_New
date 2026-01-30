@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+ 
+<div class="card">
+    <h2>Teacher Profile</h2>
+
+    {% for message in messages %}
+        <div class="alert">{{ message }}</div>
+    {% endfor %}
+
+    <table>
+        <tr><th>First Name</th><td>{{ teacher.first_name }}</td></tr>
+        <tr><th>Last Name</th><td>{{ teacher.last_name }}</td></tr>
+        <tr><th>Department</th><td>{{ teacher.dept_name }}</td></tr>
+        <tr><th>Designation</th><td>{{ teacher.get_designation_display }}</td></tr>
+        <tr><th>Experience</th><td>{{ teacher.exp }} years</td></tr>
+        <tr><th>Mobile</th><td>{{ teacher.mobile }}</td></tr>
+        <tr><th>Date of Birth</th><td>{{ teacher.dob }}</td></tr>
+        <tr><th>Date of Joining</th><td>{{ teacher.doj }}</td></tr>
+    </table>
+
+    <div class="form-actions">
+        <a href="{% url 'instructor:teacher_edit' %}" class="btn btn-primary">Edit Profile</a>
+        <a href="{% url 'instructor:teacher_delete' %}" class="btn btn-danger">Delete Profile</a>
+    </div>
+</div>
+{% endblock %}

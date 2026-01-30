@@ -13,8 +13,7 @@ from instructor.utils import generate_otp
 
 
 def login_view(request):
-    email=""
-    password=""
+    
     if request.method == "POST":
         email = request.POST.get("email", "").lower().strip()
         password = request.POST.get("password", "").strip()

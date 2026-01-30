@@ -15,13 +15,20 @@ def register(request):
 
             otp = EmailOTP.generate_otp()
             EmailOTP.objects.create(user=user, otp=otp)
+            
+             # 🔑 SESSION VALUES SET HERE
+            request.session["otp_user_id"] = user.id
+            request.session["otp_purpose"] = "registration"
 
             send_otp_email(user.email, otp)
 
             request.session["otp_user_id"] = user.id
             return redirect("instructor:verify_otp")
+            
+            
 
     else:
         form = RegistrationForm()
 
     return render(request, "auth/register.html", {"form": form})
+

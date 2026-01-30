@@ -32,6 +32,13 @@ urlpatterns = [
 ]
 
 
+from instructor.views import teacher_views
 
+urlpatterns += [
+    path("teacher/", teacher_views.teacher_profile_detail, name="teacher_detail"),
+    path("teacher/create/", teacher_views.teacher_profile_create, name="teacher_create"),
+    path("teacher/edit/", teacher_views.teacher_profile_update, name="teacher_edit"),
+    path("teacher/delete/", teacher_views.teacher_profile_delete, name="teacher_delete"),
+]
 
 

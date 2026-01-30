@@ -7,7 +7,17 @@ Not Found: /favicon.ico
 [29/Jan/2026 09:50:31] "GET /favicon.ico HTTP/1.1" 404 2863
 
 b) New Registration : http://127.0.0.1:8000/instructor/register/
+[30/Jan/2026 23:16:10] "GET /instructor/register/ HTTP/1.1" 200 2884
+[30/Jan/2026 23:16:35] "POST /instructor/register/ HTTP/1.1" 302 0
 
-[29/Jan/2026 10:58:25] "GET /instructor/login/ HTTP/1.1" 200 2972
-[29/Jan/2026 10:59:04] "GET /instructor/register/ HTTP/1.1" 200 2884
+b) New Registration : http://127.0.0.1:8000/instructor/verify_otp/
+[30/Jan/2026 23:16:35] "GET /instructor/verify-otp/ HTTP/1.1" 200 1791
+[30/Jan/2026 23:16:59] "POST /instructor/verify-otp/ HTTP/1.1" 302 0
 
+b) New Registration : http://127.0.0.1:8000/instructor/set_password/
+[30/Jan/2026 23:16:59] "GET /instructor/set-password/ HTTP/1.1" 200 1902
+[30/Jan/2026 23:17:20] "POST /instructor/set-password/ HTTP/1.1" 302 0
+
+b) New Registration : http://127.0.0.1:8000/instructor/dashboard/
+[30/Jan/2026 23:17:20] "GET /instructor/dashboard/ HTTP/1.1" 200 3276
+[30/Jan/2026 23:17:26] "POST /instructor/logout/ HTTP/1.1" 302 0
