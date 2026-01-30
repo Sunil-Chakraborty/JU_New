@@ -7,6 +7,7 @@ from django.urls import path
 from instructor.views.registration_views import register
 from instructor.views.auth_views import login_view, logout_view
 from instructor.views.otp_views import verify_otp
+
 from instructor.views.password_views import (
     set_password,
     forgot_password,

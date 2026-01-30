@@ -118,8 +118,8 @@
         <input type="email" name="email" required>
 
         <label>Password</label>
-        <input type="password" name="password">
-        <small>Leave blank for first-time login</small>
+        <input type="password" name="password" value="" autocomplete="new-password">
+        
 
         <button type="submit">Login</button>
     </form>
@@ -129,6 +129,7 @@
     <div class="links">
         <a href="{% url 'instructor:forgot_password' %}">Forgot Password?</a>
         <a href="{% url 'instructor:register' %}">New Registration</a>
+		
     </div>
 </div>
 

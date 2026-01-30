@@ -39,7 +39,7 @@ AUTHENTICATION_BACKENDS = [
 LOGIN_URL = "instructor:login"
 LOGIN_REDIRECT_URL = "instructor:dashboard"
 LOGOUT_REDIRECT_URL = "instructor:login"
-SESSION_COOKIE_AGE = 300  # OTP session safety
+
 
 
 # Application definition
@@ -155,6 +155,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 # Or make the session expire when the browser is closed
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# SESSION_COOKIE_AGE = 300  # OTP session safety
+
+# Keep session alive even after browser close
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+# Session valid for 30 days
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 30
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

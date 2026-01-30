@@ -9,7 +9,7 @@ def verify_otp(request):
     purpose = request.session.get("otp_purpose")  # registration / forgot_password / first_login
 
     if not user_id or not purpose:
-        messages.error(request, "Session expired. Please try again.")
+        messages.error(request, "Set your password for first-time login")
         return redirect("instructor:login")
 
     user = get_object_or_404(CustomUser, id=user_id)
@@ -46,6 +46,7 @@ def verify_otp(request):
         # 🔥 IMPORTANT: persist user for password step
         request.session["set_password_user_id"] = user.id
         request.session["set_password_purpose"] = purpose
+        
 
         return redirect("instructor:set_password")
 

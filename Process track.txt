@@ -1,0 +1,13 @@
+Steps to execute:
+a) Login Page: http://127.0.0.1:8000/instructor/login/
+
+[29/Jan/2026 09:50:28] "GET / HTTP/1.1" 302 0
+[29/Jan/2026 09:50:28] "GET /instructor/login/ HTTP/1.1" 200 2920
+Not Found: /favicon.ico
+[29/Jan/2026 09:50:31] "GET /favicon.ico HTTP/1.1" 404 2863
+
+b) New Registration : http://127.0.0.1:8000/instructor/register/
+
+[29/Jan/2026 10:58:25] "GET /instructor/login/ HTTP/1.1" 200 2972
+[29/Jan/2026 10:59:04] "GET /instructor/register/ HTTP/1.1" 200 2884
+
