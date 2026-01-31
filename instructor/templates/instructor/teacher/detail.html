@@ -1,28 +1,264 @@
-{% extends "base.html" %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Teacher Profile</title>
 
-{% block content %}
- 
-<div class="card">
-    <h2>Teacher Profile</h2>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+        }
 
-    {% for message in messages %}
-        <div class="alert">{{ message }}</div>
-    {% endfor %}
+        /* ===== TOP BAR ===== */
+        .topbar {
+            height: 55px;
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
 
-    <table>
-        <tr><th>First Name</th><td>{{ teacher.first_name }}</td></tr>
-        <tr><th>Last Name</th><td>{{ teacher.last_name }}</td></tr>
-        <tr><th>Department</th><td>{{ teacher.dept_name }}</td></tr>
-        <tr><th>Designation</th><td>{{ teacher.get_designation_display }}</td></tr>
-        <tr><th>Experience</th><td>{{ teacher.exp }} years</td></tr>
-        <tr><th>Mobile</th><td>{{ teacher.mobile }}</td></tr>
-        <tr><th>Date of Birth</th><td>{{ teacher.dob }}</td></tr>
-        <tr><th>Date of Joining</th><td>{{ teacher.doj }}</td></tr>
-    </table>
+        .topbar a,
+        .topbar button {
+            color: #fff;
+            background: none;
+            border: none;
+            margin-left: 15px;
+            cursor: pointer;
+            text-decoration: none;
+        }
 
-    <div class="form-actions">
-        <a href="{% url 'instructor:teacher_edit' %}" class="btn btn-primary">Edit Profile</a>
-        <a href="{% url 'instructor:teacher_delete' %}" class="btn btn-danger">Delete Profile</a>
+        /* ===== LAYOUT ===== */
+        .layout {
+            display: flex;
+            min-height: calc(100vh - 55px);
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 220px;
+            background-color: #222;
+            color: #fff;
+            padding-top: 20px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 20px;
+            color: #ddd;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover {
+            background-color: #333;
+            color: #fff;
+        }
+
+        /* ===== CONTENT ===== */
+        .content {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        /* ===== GRID ===== */
+        .section-title {
+            margin: 30px 0 15px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .detail-item label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .detail-item div {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fafafa;
+        }
+
+        .photo-box img {
+            max-width: 150px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        /* ===== ACTIONS ===== */
+        .actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #000;
+            color: #fff;
+        }
+
+        .btn-danger {
+            background: #b00020;
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #000;
+        }
+    </style>
+</head>
+
+<body>
+
+{% if user.is_authenticated %}
+
+<!-- TOP BAR -->
+<div class="topbar">
+    <div><strong>Instructor Portal</strong></div>
+    <div>
+        <a href="{% url 'instructor:change_password' %}">Change Password</a>
+        <form method="post" action="{% url 'instructor:logout' %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
     </div>
 </div>
-{% endblock %}
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <a href="{% url 'instructor:dashboard' %}">Dashboard</a>
+        <a href="{% url 'instructor:teacher_detail' %}">My Profile</a>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+        <div class="card">
+
+            <h2>Teacher Profile</h2>
+
+            <!-- PERSONAL DETAILS -->
+            <div class="section-title">Personal Details</div>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <label>Name</label>
+                    <div>{{ teacher.first_name }}</div>
+                </div>
+
+                <div class="detail-item">
+                    <label>Date of Birth</label>
+                    <div>{{ teacher.dob }}</div>
+                </div>
+
+                <div class="detail-item">
+                    <label>Gender</label>
+                    <div>{{ teacher.get_gender_display }}</div>
+                </div>
+
+                <div class="detail-item">
+                    <label>Caste</label>
+                    <div>{{ teacher.get_caste_display }}</div>
+                </div>
+
+                <div class="detail-item">
+                    <label>Mobile</label>
+                    <div>{{ teacher.mobile }}</div>
+                </div>
+            </div>
+
+            <!-- ACADEMIC DETAILS -->
+            <div class="section-title">Academic Details</div>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <label>Department</label>
+                    <div>{{ teacher.dept_name }}</div>
+                </div>
+
+                <div class="detail-item">
+                    <label>Group</label>
+                    <div>{{ teacher.group_name }}</div>
+                </div>
+
+                <div class="detail-item">
+                    <label>Designation</label>
+                    <div>{{ teacher.get_designation_display }}</div>
+                </div>
+
+                <div class="detail-item">
+                    <label>Date of Joining</label>
+                    <div>{{ teacher.doj }}</div>
+                </div>
+
+                <div class="detail-item">
+                    <label>Experience (Years)</label>
+                    <div>{{ teacher.exp }}</div>
+                </div>
+            </div>
+
+            <!-- PROFILE PHOTO -->
+            <div class="section-title">Profile Photo</div>
+            <div class="detail-grid">
+                <div class="detail-item photo-box">
+                    {% if teacher.photo %}
+                        <img src="{{ teacher.photo.url }}" alt="Profile Photo">
+                    {% else %}
+                        <div>No photo uploaded</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="actions">
+                <a href="{% url 'instructor:teacher_edit' %}" class="btn btn-primary">Edit Profile</a>
+                <a href="{% url 'instructor:teacher_delete' %}" class="btn btn-danger">Delete</a>
+                <a href="{% url 'instructor:dashboard' %}" class="btn btn-secondary">Back</a>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+{% else %}
+<p style="padding:20px;">Unauthorized access</p>
+{% endif %}
+
+</body>
+</html>

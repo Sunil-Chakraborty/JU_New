@@ -6,6 +6,7 @@ from instructor.models import CustomUser, EmailOTP, InstructorEmailVerification
 from instructor.services.email_service import send_otp_email
 
 from instructor.utils import generate_otp
+from instructor.utils import clear_messages
 
 
 
@@ -13,6 +14,8 @@ from instructor.utils import generate_otp
 
 
 def login_view(request):
+    
+    clear_messages(request)
     
     if request.method == "POST":
         email = request.POST.get("email", "").lower().strip()

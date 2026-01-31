@@ -21,3 +21,5 @@ class RegistrationForm(forms.ModelForm):
         if user_type == "admin":
             raise forms.ValidationError("Admin cannot register here")
         return user_type
+
+
