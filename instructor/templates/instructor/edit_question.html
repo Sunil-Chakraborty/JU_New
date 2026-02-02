@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .wrapper {
+        max-width: 700px;
+        margin: 50px auto;
+    }
+
+    .card {
+        background: #ffffff;
+        padding: 30px 32px;
+        border-radius: 10px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    }
+
+    h2 {
+        margin-top: 0;
+        margin-bottom: 20px;
+        color: #202124;
+    }
+
+    .form-group {
+        margin-bottom: 22px;
+    }
+
+    label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: #333;
+    }
+
+    input[type="text"], select {
+        width: 100%;
+        padding: 12px;
+        font-size: 14px;
+        border-radius: 6px;
+        border: 1px solid #dadce0;
+    }
+
+    .option-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .option-row input {
+        flex: 1;
+    }
+
+    .remove-btn {
+        background: #e53935;
+        color: #fff;
+        border: none;
+        padding: 6px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+    }
+
+    .save-btn {
+        background: #1a73e8;
+        color: #fff;
+        border: none;
+        padding: 10px 22px;
+        border-radius: 6px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .cancel-btn {
+        background: #5f6368;
+        color: #fff;
+        text-decoration: none;
+        padding: 10px 22px;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+</style>
+
+<div class="wrapper">
+    <div class="card">
+
+        <h2>Edit Question</h2>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <!-- Question Text -->
+            <div class="form-group">
+                <label>Question Text</label>
+                {{ form.text }}
+            </div>
+
+            <!-- Question Type -->
+            <div class="form-group">
+                <label>Question Type</label>
+                {{ form.q_type }}
+            </div>
+
+            <!-- Options -->
+            <div class="form-group">
+                <label>Options</label>
+
+                {% for opt in question.options.all %}
+                    <div class="option-row">
+                        <input type="text"
+                               name="options[]"
+                               value="{{ opt.text }}">
+                    </div>
+                {% empty %}
+                    <small style="color:#666;">
+                        No options required for this question type.
+                    </small>
+                {% endfor %}
+            </div>
+
+            <!-- Actions -->
+            <div class="actions">
+                <a href="{% url 'instructor:create_question' question.session.id %}"
+                   class="cancel-btn">
+                    ← Cancel
+                </a>
+
+                <button type="submit" class="save-btn">
+                    ✔ Update Question
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+{% endblock %}

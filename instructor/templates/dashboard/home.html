@@ -125,7 +125,13 @@
               
 		<a href="{% url 'instructor:teacher_detail' %}">My Profile</a>
         <a href="#">Students</a>
-        <a href="#">Feedback</a>
+        		
+		<a href="{% url 'instructor:create_feedback_session' %}">Create Feedback Session</a>
+
+		<a href="{% url 'instructor:feedback_sessions_list' %}">My Feedback Sessions</a>
+
+
+		
         <a href="#">Reports</a>
         <a href="#">Settings</a>
     </div>

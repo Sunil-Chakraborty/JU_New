@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .wrapper {
+        max-width: 900px;
+        margin: 30px auto;
+    }
+
+    .card {
+        background: #fff;
+        padding: 25px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,.12);
+    }
+
+    .question {
+        margin-bottom: 22px;
+    }
+
+    .question label {
+        font-weight: 600;
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .muted {
+        color: #666;
+        font-size: 13px;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="wrapper">
+    <div class="card">
+        <h2>{{ session.title }}</h2>
+        <p class="muted">
+            Student Preview – Responses are not saved
+        </p>
+
+        <form>
+
+            {% for q in questions %}
+                <div class="question">
+                    <label>
+                        {{ forloop.counter }}. {{ q.text }}
+                    </label>
+
+                    {% if q.q_type == "text" %}
+                        <input type="text" disabled>
+
+                    {% elif q.q_type == "textarea" %}
+                        <textarea rows="3" disabled></textarea>
+
+                    {% elif q.q_type == "radio" %}
+                        {% for opt in q.options.all %}
+                            <label>
+                                <input type="radio" disabled>
+                                {{ opt.text }}
+                            </label><br>
+                        {% endfor %}
+
+                    {% elif q.q_type == "checkbox" %}
+                        {% for opt in q.options.all %}
+                            <label>
+                                <input type="checkbox" disabled>
+                                {{ opt.text }}
+                            </label><br>
+                        {% endfor %}
+
+                    {% elif q.q_type == "yes_no" %}
+                        <label><input type="radio" disabled> Yes</label><br>
+                        <label><input type="radio" disabled> No</label>
+
+                    {% elif q.q_type == "rating" %}
+                        {% for i in "12345" %}
+                            <label>
+                                <input type="radio" disabled> {{ forloop.counter }}
+                            </label>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            {% empty %}
+                <p>No questions defined.</p>
+            {% endfor %}
+
+        </form>
+    </div>
+</div>
+
+{% endblock %}

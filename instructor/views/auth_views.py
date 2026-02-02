@@ -57,6 +57,9 @@ def login_view(request):
     return render(request, "auth/login.html")
 
 def logout_view(request):
+    
+    clear_messages(request)
+
     if request.method == "POST":
         logout(request)
     return redirect("instructor:login")

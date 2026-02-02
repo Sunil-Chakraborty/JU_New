@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ session.title }}</title>
+    <style>
+        body {
+            background:#f1f3f4;
+            font-family:Arial;
+        }
+        .card {
+            max-width:750px;
+            margin:20px auto;
+            background:white;
+            padding:20px;
+            border-radius:8px;
+            box-shadow:0 2px 6px rgba(0,0,0,.15);
+        }
+        .question {
+            margin-bottom:22px;
+        }
+        .question-title {
+            font-weight:600;
+            margin-bottom:8px;
+        }
+        label {
+            display:block;
+            margin:6px 0;
+        }
+        input[type=text], textarea {
+            width:100%;
+            padding:8px;
+        }
+        button {
+            background:#1a73e8;
+            color:white;
+            border:none;
+            padding:12px 24px;
+            border-radius:6px;
+            font-size:15px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2>{{ session.title }}</h2>
+    <p>Your feedback is completely anonymous.</p>
+
+    <form method="post">
+        {% csrf_token %}
+
+        {% for q in questions %}
+            <div class="question">
+                <div class="question-title">
+                    {{ forloop.counter }}. {{ q.text }}
+                </div>
+
+                {% if q.q_type == 'text' %}
+                    <input type="text" name="question_{{ q.id }}">
+
+                {% elif q.q_type == 'textarea' %}
+                    <textarea name="question_{{ q.id }}" rows="4"></textarea>
+
+                {% elif q.q_type == 'radio' %}
+                    {% for opt in q.options.all %}
+                        <label>
+                            <input type="radio"
+                                   name="question_{{ q.id }}"
+                                   value="{{ opt.text }}">
+                            {{ opt.text }}
+                        </label>
+                    {% endfor %}
+
+                {% elif q.q_type == 'checkbox' %}
+                    {% for opt in q.options.all %}
+                        <label>
+                            <input type="checkbox"
+                                   name="question_{{ q.id }}"
+                                   value="{{ opt.text }}">
+                            {{ opt.text }}
+                        </label>
+                    {% endfor %}
+
+                {% elif q.q_type == 'rating' %}
+                    {% for i in "12345" %}
+						<label style="display:flex; align-items:center; gap:10px;">
+							<input type="radio" name="question_{{ q.id }}" value="{{ forloop.counter }}">
+							<span style="color:#fbbc04;">
+								{% for j in "12345" %}
+									{% if forloop.parentloop.counter >= forloop.counter %}
+										★
+									{% endif %}
+								{% endfor %}
+							</span>
+						</label>
+					{% endfor %}
+
+
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <button type="submit">Submit Feedback</button>
+    </form>
+</div>
+
+</body>
+</html>

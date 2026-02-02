@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .wrapper {
+        max-width: 900px;
+        margin: 40px auto;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    h2 {
+        margin: 0;
+        color: #202124;
+    }
+
+    .create-btn {
+        background: #1a73e8;
+        color: #fff;
+        padding: 10px 16px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .card {
+        background: #fff;
+        padding: 18px 22px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,.12);
+        margin-bottom: 15px;
+    }
+
+    .title {
+        font-weight: 600;
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+
+    .actions a {
+        margin-right: 15px;
+        text-decoration: none;
+        font-size: 14px;
+        color: #1a73e8;
+    }
+
+    .actions a.student {
+        color: #0f9d58;
+    }
+
+    .empty {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 6px;
+        color: #666;
+    }
+</style>
+
+<div class="wrapper">
+
+    <div class="header">
+	
+			<a href="{% url 'instructor:dashboard' %}" class="back-link">
+				← Back to Dashboard
+			</a>
+			
+        <h2>Your Feedback Sessions</h2>
+
+        <a href="{% url 'instructor:create_feedback_session' %}" class="create-btn">
+            + New Session
+        </a>
+    </div>
+
+    {% for s in sessions %}
+        <div class="card">
+		
+			
+            <div class="title">{{ s.title }}</div>
+
+            <div class="actions">
+                <a href="{% url 'instructor:create_question' s.id %}">
+                    ✏ Add / Edit Questions
+                </a>
+
+                <a href="{% url 'instructor:student_feedback' s.id %}"
+                   class="student"
+                   target="_blank">
+                    🔗 Student Link
+                </a>
+				
+				{% if not s.questions.exists %}
+					<a href="{% url 'instructor:delete_session' s.id %}"
+					   style="color:#e53935;"
+					   onclick="return confirm(
+						   'Delete this feedback session? This cannot be undone.'
+					   );">
+						🗑 Delete
+					</a>
+				{% endif %}
+				
+				
+            </div>
+        </div>
+    {% empty %}
+        <div class="empty">
+            No feedback sessions created yet.
+        </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

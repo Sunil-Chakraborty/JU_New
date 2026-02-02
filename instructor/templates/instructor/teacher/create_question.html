@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Create Feedback Question</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f1f3f4;
+        padding: 20px;
+    }
+    .card {
+        background: #fff;
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,.15);
+    }
+    h2 {
+        margin-bottom: 15px;
+    }
+    label {
+        font-weight: bold;
+        display: block;
+        margin-top: 15px;
+    }
+    input, select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 6px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+    .option {
+        display: flex;
+        gap: 10px;
+        margin-top: 8px;
+    }
+    .option input {
+        flex: 1;
+    }
+    .option button {
+        background: #e53935;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+    .add-btn {
+        margin-top: 10px;
+        background: #1a73e8;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .save-btn {
+        margin-top: 20px;
+        background: #0f9d58;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 6px;
+        font-size: 15px;
+        cursor: pointer;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2>Create Feedback Question</h2>
+
+    <label>Question Text</label>
+    <input type="text" placeholder="Enter question">
+
+    <label>Question Type</label>
+    <select id="qType" onchange="toggleOptions()">
+        <option value="text">Short Text</option>
+        <option value="textarea">Long Text</option>
+        <option value="radio">Radio (Single choice)</option>
+        <option value="checkbox">Checkbox (Multiple choice)</option>
+        <option value="rating">Rating (1–5)</option>
+    </select>
+
+    <div id="optionsBox" style="display:none;">
+        <label>Options</label>
+        <div id="options"></div>
+        <button class="add-btn" type="button" onclick="addOption()">+ Add Option</button>
+    </div>
+
+    <button class="save-btn">Save Question</button>
+</div>
+
+<script>
+function toggleOptions() {
+    const type = document.getElementById("qType").value;
+    const box = document.getElementById("optionsBox");
+
+    if (type === "radio" || type === "checkbox") {
+        box.style.display = "block";
+    } else {
+        box.style.display = "none";
+        document.getElementById("options").innerHTML = "";
+    }
+}
+
+function addOption() {
+    const div = document.createElement("div");
+    div.className = "option";
+    div.innerHTML = `
+        <input type="text" placeholder="Option text">
+        <button type="button" onclick="this.parentElement.remove()">✕</button>
+    `;
+    document.getElementById("options").appendChild(div);
+}
+</script>
+
+</body>
+</html>

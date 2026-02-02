@@ -4,10 +4,12 @@ from django.contrib import messages
 
 from instructor.models.teacher import Teacher
 from instructor.forms.teacher_forms import TeacherForm
-
+from instructor.utils import clear_messages
 
 @login_required
 def teacher_profile_detail(request):
+    
+
     teacher, _ = Teacher.objects.get_or_create(user=request.user)
     return render(request, "instructor/teacher/detail.html", {"teacher": teacher})
 
@@ -33,6 +35,8 @@ def teacher_profile_create(request):
 
 @login_required
 def teacher_profile_update(request):
+    clear_messages(request)
+
     teacher = get_object_or_404(Teacher, user=request.user)
 
     if request.method == "POST":

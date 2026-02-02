@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teaching Feedback</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f1f3f4;
+        margin: 0;
+        padding: 12px;
+    }
+
+    .form-card {
+        background: #ffffff;
+        max-width: 750px;
+        margin: auto;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    h2 {
+        font-size: 20px;
+        margin-bottom: 6px;
+        color: #202124;
+    }
+
+    .subtitle {
+        font-size: 14px;
+        color: #5f6368;
+        margin-bottom: 20px;
+    }
+
+    .question {
+        margin-bottom: 22px;
+    }
+
+    .question-title {
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #202124;
+    }
+
+    label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 4px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    input[type="radio"],
+    input[type="checkbox"] {
+        transform: scale(1.3); /* better for touch */
+    }
+
+    input[type="text"],
+    textarea {
+        width: 100%;
+        font-size: 14px;
+        padding: 10px;
+        border: 1px solid #dadce0;
+        border-radius: 4px;
+        outline: none;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus {
+        border-color: #1a73e8;
+    }
+
+    textarea {
+        resize: vertical;
+    }
+
+    .submit-box {
+        position: sticky;
+        bottom: 0;
+        background: #ffffff;
+        padding-top: 15px;
+        text-align: center;
+    }
+
+    button {
+        width: 100%;
+        background-color: #1a73e8;
+        color: white;
+        border: none;
+        padding: 14px;
+        font-size: 16px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #1558b0;
+    }
+
+    /* Tablet & desktop adjustments */
+    @media (min-width: 600px) {
+        button {
+            width: auto;
+            padding: 10px 30px;
+        }
+        .submit-box {
+            text-align: right;
+            position: static;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="form-card">
+    <h2>Classroom Teaching Feedback</h2>
+    <div class="subtitle">
+        Your feedback is anonymous and helps improve teaching quality.
+    </div>
+
+    <form>
+
+        <div class="question">
+            <div class="question-title">1. How clearly were the concepts explained?</div>
+            <label><input type="radio" name="clarity"> Very clear</label>
+            <label><input type="radio" name="clarity"> Clear</label>
+            <label><input type="radio" name="clarity"> Neutral</label>
+            <label><input type="radio" name="clarity"> Unclear</label>
+            <label><input type="radio" name="clarity"> Very unclear</label>
+        </div>
+
+        <div class="question">
+            <div class="question-title">2. Rate the teacher’s subject knowledge</div>
+            <label><input type="radio" name="knowledge"> Excellent</label>
+            <label><input type="radio" name="knowledge"> Very Good</label>
+            <label><input type="radio" name="knowledge"> Good</label>
+            <label><input type="radio" name="knowledge"> Average</label>
+            <label><input type="radio" name="knowledge"> Poor</label>
+        </div>
+
+        <div class="question">
+            <div class="question-title">3. The pace of teaching was</div>
+            <label><input type="radio" name="pace"> Too fast</label>
+            <label><input type="radio" name="pace"> Slightly fast</label>
+            <label><input type="radio" name="pace"> Appropriate</label>
+            <label><input type="radio" name="pace"> Slightly slow</label>
+            <label><input type="radio" name="pace"> Too slow</label>
+        </div>
+
+        <div class="question">
+            <div class="question-title">4. The teacher encouraged interaction</div>
+            <label><input type="radio" name="interaction"> Strongly Disagree</label>
+            <label><input type="radio" name="interaction"> Disagree</label>
+            <label><input type="radio" name="interaction"> Neutral</label>
+            <label><input type="radio" name="interaction"> Agree</label>
+            <label><input type="radio" name="interaction"> Strongly Agree</label>
+        </div>
+
+        <div class="question">
+            <div class="question-title">5. Teaching methods used effectively</div>
+            <label><input type="checkbox"> Blackboard / Whiteboard</label>
+            <label><input type="checkbox"> PPT / Slides</label>
+            <label><input type="checkbox"> Real-life examples</label>
+            <label><input type="checkbox"> Problem-solving</label>
+            <label><input type="checkbox"> Class discussions</label>
+        </div>
+
+        <div class="question">
+            <div class="question-title">6. Overall understanding of the topic</div>
+            <label><input type="radio" name="understanding"> 1 ⭐</label>
+            <label><input type="radio" name="understanding"> 2 ⭐⭐</label>
+            <label><input type="radio" name="understanding"> 3 ⭐⭐⭐</label>
+            <label><input type="radio" name="understanding"> 4 ⭐⭐⭐⭐</label>
+            <label><input type="radio" name="understanding"> 5 ⭐⭐⭐⭐⭐</label>
+        </div>
+
+        <div class="question">
+            <div class="question-title">7. How effectively was class time utilized?</div>
+            <label><input type="radio" name="time"> Very effectively</label>
+            <label><input type="radio" name="time"> Effectively</label>
+            <label><input type="radio" name="time"> Moderately</label>
+            <label><input type="radio" name="time"> Ineffectively</label>
+        </div>
+
+        <div class="question">
+            <div class="question-title">8. Were your doubts addressed satisfactorily?</div>
+            <label><input type="radio" name="doubts"> Yes</label>
+            <label><input type="radio" name="doubts"> No</label>
+        </div>
+
+        <div class="question">
+            <div class="question-title">9. One thing you liked most about the class</div>
+            <input type="text" placeholder="Your response">
+        </div>
+
+        <div class="question">
+            <div class="question-title">10. Suggestions for improvement</div>
+            <textarea rows="4" placeholder="Your suggestions"></textarea>
+        </div>
+
+        <div class="submit-box">
+            <button type="submit">Submit Feedback</button>
+        </div>
+
+    </form>
+</div>
+
+</body>
+</html>

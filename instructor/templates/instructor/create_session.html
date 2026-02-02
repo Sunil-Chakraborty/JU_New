@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .wrapper {
+        max-width: 600px;
+        margin: 60px auto;
+    }
+
+    .card {
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+
+    h2 {
+        margin-top: 0;
+        margin-bottom: 20px;
+        color: #202124;
+    }
+
+    input[type="text"] {
+        width: 100%;
+        padding: 12px;
+        font-size: 15px;
+        border-radius: 6px;
+        border: 1px solid #dadce0;
+        margin-bottom: 20px;
+    }
+
+    button {
+        background: #1a73e8;
+        color: #fff;
+        border: none;
+        padding: 12px 24px;
+        font-size: 15px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #1558b0;
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-bottom: 15px;
+        text-decoration: none;
+        color: #5f6368;
+        font-size: 14px;
+    }
+</style>
+
+<div class="wrapper">
+    <div class="card">
+
+        <a href="{% url 'instructor:dashboard' %}" class="back-link">
+            ← Back to Dashboard
+        </a>
+
+        <h2>Create Feedback Session</h2>
+
+        <form method="post">
+            {% csrf_token %}
+            <input type="text"
+                   name="title"
+                   placeholder="Enter feedback session title"
+                   required>
+
+            <button type="submit">Create Session</button>
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

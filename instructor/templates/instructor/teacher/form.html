@@ -204,7 +204,16 @@
            <form method="post" enctype="multipart/form-data">
 				{% csrf_token %}
 
-				{{ form.non_field_errors }}
+				{% if messages %}
+				  <div class="alert-container">
+					{% for message in messages %}
+					  <div class="alert alert-success">
+						{{ message }}
+					  </div>
+					{% endfor %}
+				  </div>
+				{% endif %}
+
 
 				<!-- ================= PERSONAL DETAILS ================= -->
 				<h3 style="margin-top:0;">Personal Details</h3>
@@ -212,7 +221,7 @@
 				<div class="form-grid">
 
 					<div class="form-group">
-						<label>First Name</label>
+						<label>Full Name</label>
 						{{ form.first_name }}
 						{{ form.first_name.errors }}
 					</div>

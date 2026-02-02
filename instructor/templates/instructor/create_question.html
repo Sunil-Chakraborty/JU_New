@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .wrapper {
+        max-width: 800px;
+        margin: 30px auto;
+    }
+
+    .card {
+        background: #fff;
+        padding: 22px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+        margin-bottom: 25px;
+    }
+
+    h2 {
+        margin-top: 0;
+        color: #202124;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    label {
+        font-weight: 600;
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    input[type="text"], select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #dadce0;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    .option-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 8px;
+    }
+
+    .option-row input {
+        flex: 1;
+    }
+
+    .remove-btn {
+        background: #e53935;
+        color: #fff;
+        border: none;
+        padding: 6px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .add-btn {
+        background: #1a73e8;
+        color: #fff;
+        border: none;
+        padding: 8px 14px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 8px;
+    }
+
+    .save-btn {
+        background: #0f9d58;
+        color: #fff;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 6px;
+        font-size: 15px;
+        cursor: pointer;
+    }
+
+    .question-box {
+        background: #f8f9fa;
+        padding: 12px;
+        border-left: 4px solid #1a73e8;
+        margin-bottom: 10px;
+        border-radius: 4px;
+    }
+</style>
+
+<div class="wrapper">
+
+    <!-- CREATE QUESTION -->
+    <div class="card">
+		<a href="{% url 'instructor:dashboard' %}">← Back to Dashboard </a>
+        <h2>Create Question – {{ session.title }}</h2>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>Question Text</label>
+                {{ form.text }}
+            </div>
+
+            <div class="form-group">
+                <label>Question Type</label>
+                {{ form.q_type }}
+            </div>
+
+            <!-- OPTIONS -->
+            <div class="form-group" id="optionsBox" style="display:none;">
+                <label>Options</label>
+                <div id="options"></div>
+                <button type="button" class="add-btn" onclick="addOption()">
+                    + Add option
+                </button>
+            </div>
+
+            <button type="submit" class="save-btn">Save Question</button>
+        </form>
+    </div>
+	
+	<a href="{% url 'instructor:preview_feedback' session.id %}"
+	   target="_blank"
+	   style="float:right; background:#673ab7; color:#fff;
+			  padding:8px 14px; border-radius:6px;
+			  text-decoration:none;">
+		👁 Preview (Student View)
+	</a>
+	<br>
+	<!-- EXISTING QUESTIONS -->
+	<div class="card">
+		<h2>Existing Questions</h2>
+
+		{% for q in questions %}
+			<div class="question-box">
+				<strong>{{ forloop.counter }}. {{ q.text }}</strong><br>
+				<small>Type: {{ q.get_q_type_display }}</small>
+
+				{% if q.options.all %}
+					<ul style="margin-top:6px;">
+						{% for opt in q.options.all %}
+							<li>{{ opt.text }}</li>
+						{% endfor %}
+					</ul>
+				{% endif %}
+
+				<div style="margin-top:8px;">
+					<a href="{% url 'instructor:edit_question' q.id %}"
+					   style="color:#1a73e8; margin-right:10px;">
+						✏ Edit
+					</a>
+
+					<a href="{% url 'instructor:delete_question' q.id %}"
+					   style="color:#e53935;"
+					   onclick="return confirm('Are you sure you want to delete this question?');">
+						🗑 Delete
+					</a>
+				</div>
+			</div>
+		{% empty %}
+			<p>No questions added yet.</p>
+		{% endfor %}
+	</div>
+
+
+</div>
+
+<script>
+const typeSelect = document.getElementById("questionType");
+const optionsBox = document.getElementById("optionsBox");
+const optionsDiv = document.getElementById("options");
+
+typeSelect.addEventListener("change", handleTypeChange);
+
+function handleTypeChange() {
+    optionsDiv.innerHTML = "";
+
+    if (typeSelect.value === "radio" || typeSelect.value === "checkbox") {
+        optionsBox.style.display = "block";
+        addOption();
+        addOption();
+    }
+    else if (typeSelect.value === "yes_no") {
+        optionsBox.style.display = "block";
+        addFixedOption("Yes");
+        addFixedOption("No");
+    }
+    else {
+        optionsBox.style.display = "none";
+    }
+}
+
+function addOption() {
+    const div = document.createElement("div");
+    div.className = "option-row";
+    div.innerHTML = `
+        <input type="text" name="options[]" placeholder="Option text">
+        <button type="button" class="remove-btn"
+                onclick="this.parentElement.remove()">✕</button>
+    `;
+    optionsDiv.appendChild(div);
+}
+
+function addFixedOption(text) {
+    const div = document.createElement("div");
+    div.className = "option-row";
+    div.innerHTML = `
+        <input type="text" name="options[]" value="${text}" readonly>
+    `;
+    optionsDiv.appendChild(div);
+}
+</script>
+
+{% endblock %}

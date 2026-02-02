@@ -67,8 +67,3 @@ class DepartmentAdmin(admin.ModelAdmin):
     list_display = ("name", "faculty", "program", "prog_cd")
     search_fields = ("name", "faculty")
 
-
-
-@admin.register(FeedbackSession)
-class FeedbackSessionAdmin(admin.ModelAdmin):
-    list_display = ("title", "instructor", "session_id", "created_at")
