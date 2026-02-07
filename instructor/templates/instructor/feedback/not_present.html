@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.state-box{
+    max-width:520px;
+    margin:80px auto;
+    background:#fff;
+    padding:40px;
+    border-radius:14px;
+    text-align:center;
+    box-shadow:0 4px 18px rgba(0,0,0,.08);
+    font-family:Roboto,system-ui;
+}
+.icon{font-size:52px;margin-bottom:12px}
+.title{font-size:22px;font-weight:500;color:#202124;margin-bottom:10px}
+.msg{color:#5f6368;font-size:14px}
+</style>
+
+<div class="state-box">
+    <div class="icon">👋</div>
+    <div class="title">Attendance Required</div>
+    <div class="msg">
+        Please click <b>I am Present</b> before submitting feedback.
+        <br><br>
+        The teacher has not allowed submissions yet.
+    </div>
+</div>
+
+{% endblock %}

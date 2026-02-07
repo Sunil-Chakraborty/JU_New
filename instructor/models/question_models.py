@@ -1,6 +1,8 @@
 from django.db import models
 from django.conf import settings
+import uuid
 
+#Teacher control to open feedback
 
 class FeedbackSession(models.Model):
     teacher = models.ForeignKey(
@@ -8,13 +10,19 @@ class FeedbackSession(models.Model):
         on_delete=models.CASCADE,
         related_name='feedback_sessions'
     )
+    
+    public_token = models.UUIDField(null=True, blank=True, unique=True)
+    qr_activated_at = models.DateTimeField(null=True, blank=True)
+    
     title = models.CharField(max_length=200)
     is_active = models.BooleanField(default=True)
+    feedback_open = models.BooleanField(default=False)   # NEW FIELD
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
-
+ 
 
 class Question(models.Model):
     QUESTION_TYPES = (

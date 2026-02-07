@@ -1,0 +1,5 @@
+id,text,q_type,session_id
+9,How clearly were the concepts explained?,radio,4
+10,Rate the teacher’s subject knowledge,radio,4
+11,Teaching methods used effectively,checkbox,4
+12,Overall understanding of the topic,rating,4

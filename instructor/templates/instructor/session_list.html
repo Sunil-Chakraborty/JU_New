@@ -59,6 +59,58 @@
         border-radius: 6px;
         color: #666;
     }
+	.actions a.qr {
+		color: #1a73e8;
+		font-weight: 500;
+	}
+	
+	.session-meta {
+		display: flex;
+		justify-content: space-between;
+		margin-top: 6px;
+		font-size: 14px;
+		color: #555;
+	}
+
+	.session-count {
+		background: #eef6ff;
+		color: #0b5ed7;
+		padding: 4px 10px;
+		border-radius: 20px;
+		font-weight: 600;
+		font-size: 13px;
+	}
+
+	.session-count::before {
+		content: "📊 ";
+	}
+
+	.control-btn{
+		margin-left:12px;
+		padding:5px 12px;
+		border-radius:20px;
+		font-size:13px;
+		text-decoration:none;
+		font-weight:600;
+		border:1px solid transparent;
+	}
+
+	.open-btn{
+		background:#e6f4ea;
+		color:#137333;
+		border-color:#34a853;
+	}
+
+	.close-btn{
+		background:#fce8e6;
+		color:#c5221f;
+		border-color:#ea4335;
+	}	
+
+	.control-btn:hover{
+		opacity:.85;
+	}
+
 </style>
 
 <div class="wrapper">
@@ -80,7 +132,52 @@
         <div class="card">
 		
 			
-            <div class="title">{{ s.title }}</div>
+            <div class="session-title">
+				{{ s.title }}
+				
+				<span class="session-meta">
+					· {{ s.created_at|date:"d M Y, h:i A" }}
+				</span>
+				
+				<span class="response-count" id="count-{{ s.id }}">
+					👥 {{ s.response_count }} Responses
+				</span>
+
+
+			</div>
+			
+			<div class="session-live" style="margin-top:8px; font-size:14px;">
+
+				<span id="present-{{ s.id }}">
+					👥 0 Present
+				</span>
+
+				&nbsp;|&nbsp;
+
+				<span id="status-{{ s.id }}">
+					{% if s.feedback_open %}
+						🟢 Feedback Open
+					{% else %}
+						🔴 Closed
+					{% endif %}
+				</span>
+
+				{% if s.feedback_open %}
+					<a href="{% url 'instructor:toggle_feedback' s.id %}"
+					   class="control-btn close-btn">
+					   ⛔ Close
+					</a>
+				{% else %}
+					<a href="{% url 'instructor:toggle_feedback' s.id %}"
+					   class="control-btn open-btn">
+					   ▶ Start
+					</a>
+				{% endif %}
+
+			</div>
+
+
+
 
             <div class="actions">
                 <a href="{% url 'instructor:create_question' s.id %}">
@@ -92,6 +189,12 @@
                    target="_blank">
                     🔗 Student Link
                 </a>
+				
+				<a href="{% url 'instructor:generate_qr' s.id %}"
+				   style="color:#1a73e8;"
+				   target="_blank">
+					📱 Show QR
+				</a>
 				
 				{% if not s.questions.exists %}
 					<a href="{% url 'instructor:delete_session' s.id %}"
@@ -113,5 +216,34 @@
     {% endfor %}
 
 </div>
+	<script>
+		function updateLiveAttendance(){
+
+			fetch("{% url 'instructor:live_attendance_counts' %}")
+			.then(res => res.json())
+			.then(data => {
+
+				for(const id in data){
+
+					// update present count
+					const presentEl = document.getElementById("present-"+id);
+					if(presentEl){
+						presentEl.innerText = "👥 " + data[id].present + " Present";
+					}
+
+					// update open/close status
+					const statusEl = document.getElementById("status-"+id);
+					if(statusEl){
+						statusEl.innerText = data[id].open ? "🟢 Feedback Open" : "🔴 Closed";
+					}
+				}
+			});
+		}
+
+		// every 5 sec
+		setInterval(updateLiveAttendance, 5000);
+		updateLiveAttendance();
+	</script>
+
 
 {% endblock %}

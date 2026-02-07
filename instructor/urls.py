@@ -35,7 +35,7 @@ urlpatterns = [
 
 
 from instructor.views import (teacher_views, student_feedback_views, 
-     feedback_session_views, question_builder_views, student_preview_feedback) 
+     feedback_session_views, question_builder_views, student_preview_feedback, student_feedback_views) 
 
 urlpatterns += [
     path("teacher/", teacher_views.teacher_profile_detail, name="teacher_detail"),
@@ -45,7 +45,7 @@ urlpatterns += [
 
     path("feedback/session/create/",feedback_session_views.create_feedback_session,name="create_feedback_session"),    
 
-    path('feedback/<int:session_id>/',student_feedback_views.student_feedback,name='student_feedback'),
+    
     path("feedback/sessions/", feedback_session_views.feedback_sessions_list, name="feedback_sessions_list"),
 
     path(
@@ -79,5 +79,63 @@ urlpatterns += [
     ),
 
 
+    path(
+        "feedback/session/<int:session_id>/qr/",
+        feedback_session_views.generate_qr,
+        name="generate_qr",
+    ),
+
+    
+    path(
+        "feedback/session/live-counts/",
+        feedback_session_views.session_response_counts,
+        name="session_live_counts",
+    ),
+
+    path("feedback/<uuid:token>/", student_feedback_views.public_feedback, name="public_feedback"),
+    path("feedback/<uuid:token>/attendance/", student_feedback_views.mark_attendance, name="mark_attendance"),
+    path("feedback/<uuid:token>/status/", student_feedback_views.feedback_status, name="feedback_status"),
+
+    path(
+        "feedback/live-attendance/",
+        feedback_session_views.live_attendance_counts,
+        name="live_attendance_counts"
+    ),
+
+    # Student QR access
+    path(
+        "feedback/<uuid:token>/",
+        student_feedback_views.public_feedback,
+        name="public_feedback"
+    ),
+
+    # Attendance click
+    path(
+        "feedback/<uuid:token>/attendance/",
+        student_feedback_views.mark_attendance,
+        name="mark_attendance"
+    ),
+
+    # Teacher permission polling
+    path(
+        "feedback/<uuid:token>/status/",
+        student_feedback_views.feedback_status,
+        name="feedback_status"
+    ),
+    
+    # student feedback form (teacher preview / direct link)
+    path(
+        "feedback/<int:session_id>/",
+        student_feedback_views.student_feedback,
+        name="student_feedback"
+    ),
+    
+    path("submit/<int:session_id>/", student_feedback_views.submit_feedback, name="submit_feedback"),
+
+    path(
+        "feedback/session/<int:session_id>/toggle/",
+        feedback_session_views.toggle_feedback,
+        name="toggle_feedback"
+    ),
 
 ]

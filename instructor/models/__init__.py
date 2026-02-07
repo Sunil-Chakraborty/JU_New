@@ -5,3 +5,5 @@ from .teacher import Teacher
 from .verification import InstructorEmailVerification
 from .question_models import  FeedbackSession, Question, Option
 from .response_models import  FeedbackResponse, Answer
+from .attendance_models import SessionAttendance
+

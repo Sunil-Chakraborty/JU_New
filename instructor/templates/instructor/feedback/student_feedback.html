@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.gf-container {
+    max-width: 760px;
+    margin: 40px auto;
+    font-family: "Roboto", system-ui, sans-serif;
+}
+
+.gf-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: 0 4px 14px rgba(0,0,0,.08);
+}
+
+.gf-title {
+    font-size: 28px;
+    font-weight: 500;
+    color: #202124;
+}
+
+.gf-subtitle {
+    font-size: 14px;
+    color: #5f6368;
+    margin-bottom: 28px;
+}
+
+.gf-question {
+    margin-bottom: 28px;
+}
+
+.gf-question-title {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.gf-option { display:block; margin-bottom:8px; }
+
+.gf-text, .gf-textarea {
+    width:100%;
+    padding:10px 12px;
+    border:1px solid #dadce0;
+    border-radius:6px;
+}
+
+.gf-textarea { min-height:90px; }
+
+.gf-submit {
+    margin-top:32px;
+    background:#1a73e8;
+    color:#fff;
+    border:none;
+    padding:10px 26px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.gf-submit:hover { background:#1558b0; }
+
+.gf-rating { display:flex; flex-direction:column; gap:8px; }
+.rating-row { display:flex; align-items:center; gap:10px; cursor:pointer; }
+.stars { font-size:20px; letter-spacing:3px; }
+.filled { color:#fbbc04; }
+.empty { color:#dadce0; }
+</style>
+
+<div class="gf-container">
+<div class="gf-card">
+
+<div class="gf-title">
+    {{ session.title }}
+    <div style="font-size:13px;color:#5f6368;">
+        {{ session.created_at|date:"d M Y, h:i A" }}
+    </div>
+</div>
+
+<div class="gf-subtitle">
+    Your feedback is completely anonymous.
+</div>
+
+<form method="post" action="{% url 'instructor:submit_feedback' session.id %}">
+
+    {% csrf_token %}
+
+    {% for q in session.questions.all %}
+    <div class="gf-question">
+
+        <div class="gf-question-title">
+            {{ forloop.counter }}. {{ q.text }}
+        </div>
+
+        {# TEXT #}
+        {% if q.q_type == "text" %}
+            <input class="gf-text" type="text" name="question_{{ q.id }}">
+
+        {# TEXTAREA #}
+        {% elif q.q_type == "textarea" %}
+            <textarea class="gf-textarea" name="question_{{ q.id }}"></textarea>
+
+        {# RADIO #}
+        {% elif q.q_type == "radio" %}
+            {% for opt in q.options.all %}
+                <label class="gf-option">
+                    <input type="radio" name="question_{{ q.id }}" value="{{ opt.id }}">
+                    {{ opt.text }}
+                </label>
+            {% endfor %}
+
+        {# CHECKBOX #}
+        {% elif q.q_type == "checkbox" %}
+            {% for opt in q.options.all %}
+                <label class="gf-option">
+                    <input type="checkbox" name="question_{{ q.id }}" value="{{ opt.id }}">
+                    {{ opt.text }}
+                </label>
+            {% endfor %}
+
+        {# YES / NO #}
+        {% elif q.q_type == "yes_no" %}
+            {% for opt in q.options.all %}
+                <label class="gf-option">
+                    <input type="radio" name="question_{{ q.id }}" value="{{ opt.id }}">
+                    {{ opt.text }}
+                </label>
+            {% endfor %}
+
+        {# RATING #}
+        {% elif q.q_type == "rating" %}
+            <div class="gf-rating">
+            {% for r in "12345" %}
+                {% with val=forloop.counter %}
+                <label class="rating-row">
+                    <input type="radio" name="question_{{ q.id }}" value="{{ val }}">
+                    <span class="stars">
+                    {% for star in "12345" %}
+                        {% if forloop.counter <= val %}
+                            <span class="filled">★</span>
+                        {% else %}
+                            <span class="empty">★</span>
+                        {% endif %}
+                    {% endfor %}
+                    </span>
+                </label>
+                {% endwith %}
+            {% endfor %}
+            </div>
+        {% endif %}
+
+    </div>
+    {% endfor %}
+
+    
+</form>
+
+
+</div>
+</div>
+
+{% endblock %}

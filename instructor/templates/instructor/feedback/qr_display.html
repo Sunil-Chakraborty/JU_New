@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+.qr-wrapper {
+    max-width: 640px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(0,0,0,.08);
+    text-align: center;
+    font-family: system-ui, Roboto, sans-serif;
+}
+
+.qr-title {
+    font-size: 24px;
+    font-weight: 500;
+    color: #202124;
+    margin-bottom: 8px;
+}
+
+.qr-sub {
+    font-size: 14px;
+    color: #5f6368;
+    margin-bottom: 24px;
+}
+
+.qr-img {
+    margin: 24px 0;
+}
+
+.qr-img img {
+    width: 280px;
+    height: 280px;
+}
+
+.qr-url {
+    font-size: 13px;
+    color: #1a73e8;
+    word-break: break-all;
+    margin-top: 16px;
+}
+
+.qr-info {
+    margin-top: 24px;
+    font-size: 13px;
+    color: #5f6368;
+}
+</style>
+
+<div class="qr-wrapper">
+    <div class="qr-title">
+        {{ session.title }}
+    </div>
+
+    <div class="qr-sub">
+        Ask students to scan the QR code to open the feedback form
+    </div>
+
+    <div class="qr-img">
+        <img src="data:image/png;base64,{{ qr_base64 }}" alt="QR Code">
+    </div>
+
+    <div class="qr-url">
+        {{ public_url }}
+    </div>
+
+    <div class="qr-info">
+        QR activated at:
+        {{ session.qr_activated_at|date:"H:i A" }}
+    </div>
+</div>
+{% endblock %}
