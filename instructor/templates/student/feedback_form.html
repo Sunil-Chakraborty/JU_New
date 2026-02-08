@@ -262,6 +262,66 @@
 </div>
 
 		<script>
+				// ===============================
+		// Mandatory Question Validation
+		// ===============================
+		document.querySelector("form").addEventListener("submit", function(e){
+
+			let valid = true;
+			let firstInvalid = null;
+
+			document.querySelectorAll(".gf-question").forEach(q => {
+
+				let inputs = q.querySelectorAll("input, textarea");
+
+				if(inputs.length === 0) return;
+
+				let answered = false;
+
+				inputs.forEach(inp => {
+
+					if(inp.type === "radio"){
+						if(inp.checked) answered = true;
+					}
+
+					else if(inp.type === "checkbox"){
+						if(inp.checked) answered = true;
+					}
+
+					else { // text / textarea
+						if(inp.value.trim() !== "") answered = true;
+					}
+
+				});
+
+				if(!answered){
+					valid = false;
+					q.style.border = "2px solid #e53935";
+					q.style.padding = "12px";
+					q.style.borderRadius = "8px";
+
+					if(!firstInvalid)
+						firstInvalid = q;
+				}
+				else{
+					q.style.border = "none";
+				}
+
+			});
+
+			if(!valid){
+				e.preventDefault();
+
+				alert("⚠ Please answer all questions before submitting.");
+
+				if(firstInvalid)
+					firstInvalid.scrollIntoView({behavior:"smooth", block:"center"});
+			}
+
+		});
+
+				
+		
 		const token = "{{ session.public_token }}";
 		let markedPresent = false;
 

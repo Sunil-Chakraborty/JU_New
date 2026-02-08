@@ -245,5 +245,26 @@
 		updateLiveAttendance();
 	</script>
 
+	<script>
+	function updateResponseCounts(){
+
+		fetch("{% url 'instructor:live_response_counts' %}")
+		.then(res => res.json())
+		.then(data => {
+
+			for(const id in data){
+
+				const el = document.getElementById("count-"+id);
+				if(el){
+					el.innerText = "👥 " + data[id].responses + " Responses";
+				}
+			}
+		});
+	}
+
+	// run every 5 seconds
+	setInterval(updateResponseCounts, 5000);
+	updateResponseCounts();
+	</script>
 
 {% endblock %}

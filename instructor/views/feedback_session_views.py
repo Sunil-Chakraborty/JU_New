@@ -177,3 +177,21 @@ def toggle_feedback(request, session_id):
     session.save()
 
     return redirect("instructor:feedback_sessions_list")    
+    
+    
+from django.http import JsonResponse
+from instructor.models.question_models import FeedbackSession
+
+
+def live_response_counts(request):
+    data = {}
+
+    sessions = FeedbackSession.objects.all()
+
+    for s in sessions:
+        data[s.id] = {
+            "responses": s.responses.count()
+        }
+
+    return JsonResponse(data)
+    

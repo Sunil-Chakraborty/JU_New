@@ -39,17 +39,26 @@ def public_feedback(request, token):
 
         device_token = get_device_token(request, session.id)
 
-        # Prevent duplicate voting
+        # 🚫 Duplicate voting
         if FeedbackResponse.objects.filter(
                 session=session,
                 device_token=device_token
         ).exists():
-            return HttpResponse("You already submitted feedback.", status=403)
+            return render(
+                request,
+                "instructor/feedback/already_submitted.html",
+                {"session": session}
+            )
 
-        # Do not allow submission if teacher not opened
+        # 🚫 Teacher not opened yet
         if not session.feedback_open:
-            return HttpResponse("Feedback not yet allowed by teacher.", status=403)
+            return render(
+                request,
+                "instructor/feedback/waiting.html",
+                {"session": session}
+            )
 
+        # ✅ Save response
         response = FeedbackResponse.objects.create(
             session=session,
             device_token=device_token
@@ -64,7 +73,12 @@ def public_feedback(request, token):
                 answer_text=answer_text
             )
 
-        return HttpResponse("Thank you! Feedback submitted successfully.")
+        # ✅ SUCCESS PAGE
+        return render(
+            request,
+            "instructor/feedback/thank_you.html",
+            {"session": session}
+        )
 
     # ----------------------------
     # NORMAL PAGE LOAD

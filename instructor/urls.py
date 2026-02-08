@@ -137,5 +137,12 @@ urlpatterns += [
         feedback_session_views.toggle_feedback,
         name="toggle_feedback"
     ),
+    
+    path(
+    "feedback/live-response-counts/",
+    feedback_session_views.live_response_counts,
+    name="live_response_counts"
+),
+
 
 ]
