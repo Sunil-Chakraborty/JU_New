@@ -4,7 +4,7 @@ from django.conf import settings
 from django.utils import timezone
 import os
 
-
+# https://chatgpt.com/c/697f862b-22c8-8322-94c1-849c928d164a
 
 # ✅ FIXED MANAGER (EMAIL-BASED)
 class CustomUserManager(BaseUserManager):

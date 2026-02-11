@@ -1,11 +1,14 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden,  JsonResponse
 
 from instructor.models.question_models import FeedbackSession, Question, Option
+from instructor.models.teacher import Teacher
+
 from instructor.forms import FeedbackSessionForm   # 👈 CLEAN IMPORT
 from django.http import JsonResponse
-from django.db.models import Count
+from django.db.models import Count, Avg, FloatField
+from django.db.models.functions import Cast
 
 import uuid
 import qrcode
@@ -15,7 +18,7 @@ from io import BytesIO
 from django.utils import timezone
 from django.urls import reverse
 
-from instructor.models.question_models import FeedbackSession
+from instructor.models.response_models import Answer
 
 
 
@@ -178,8 +181,7 @@ def toggle_feedback(request, session_id):
 
     return redirect("instructor:feedback_sessions_list")    
     
-    
-from django.http import JsonResponse
+
 from instructor.models.question_models import FeedbackSession
 
 
@@ -194,4 +196,110 @@ def live_response_counts(request):
         }
 
     return JsonResponse(data)
-    
+
+
+def session_report(request, session_id):
+
+    session = get_object_or_404(FeedbackSession, id=session_id)
+
+    # ---------- FETCH TEACHER PROFILE ----------
+    teacher_profile = getattr(session.teacher, "teacher_profile", None)
+
+    teacher_name = "Unknown"
+    department_name = "Not Assigned"
+
+    if teacher_profile:
+        teacher_name = teacher_profile.first_name or session.teacher.username
+
+        if teacher_profile.department:
+            department_name = teacher_profile.department.name
+        elif teacher_profile.dept_name:
+            department_name = teacher_profile.dept_name
+
+    # ------------------------------------------
+
+    report = []
+
+    for q in session.questions.prefetch_related("options"):
+
+        answers = Answer.objects.filter(question=q)
+
+        # ---------------- TEXT ----------------
+        if q.q_type in ["text", "textarea"]:
+            report.append({
+                "question": q,
+                "type": "text",
+                "comments": answers.exclude(answer_text="")[:100]
+            })
+
+        # ---------------- RATING ----------------
+        elif q.q_type == "rating":
+            avg = answers.exclude(answer_text="").annotate(
+                num=Cast("answer_text", FloatField())
+            ).aggregate(avg=Avg("num"))["avg"] or 0
+
+            report.append({
+                "question": q,
+                "type": "rating",
+                "average": round(avg, 2),
+                "total": answers.count()
+            })
+
+        # ---------------- CHECKBOX ----------------
+        elif q.q_type == "checkbox":
+            counter = {}
+
+            for ans in answers:
+                if ans.answer_text:
+                    selected = ans.answer_text.split(",")
+                    for opt_id in selected:
+                        counter[opt_id] = counter.get(opt_id, 0) + 1
+
+            option_data = []
+            total = answers.count()
+
+            for opt in q.options.all():
+                count = counter.get(str(opt.id), 0)
+                percent = (count / total * 100) if total else 0
+
+                option_data.append({
+                    "label": opt.text,
+                    "count": count,
+                    "percent": round(percent, 1)
+                })
+
+            report.append({
+                "question": q,
+                "type": "choice",
+                "options": option_data,
+                "total": total
+            })
+
+        # ---------------- RADIO / YESNO ----------------
+        else:
+            option_data = []
+            total = answers.count()
+
+            for opt in q.options.all():
+                count = answers.filter(answer_text=str(opt.id)).count()
+                percent = (count / total * 100) if total else 0
+
+                option_data.append({
+                    "label": opt.text,
+                    "count": count,
+                    "percent": round(percent, 1)
+                })
+
+            report.append({
+                "question": q,
+                "type": "choice",
+                "options": option_data,
+                "total": total
+            })
+
+    return render(request, "instructor/report.html", {
+        "session": session,
+        "report": report,
+        "teacher_name": teacher_name,
+        "department_name": department_name,
+    })

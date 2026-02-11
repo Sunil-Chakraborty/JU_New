@@ -139,10 +139,17 @@ urlpatterns += [
     ),
     
     path(
-    "feedback/live-response-counts/",
-    feedback_session_views.live_response_counts,
-    name="live_response_counts"
-),
+        "feedback/live-response-counts/",
+        feedback_session_views.live_response_counts,
+        name="live_response_counts"
+    ),
+    
+    path(
+        "feedback/session/<int:session_id>/report/",
+        feedback_session_views.session_report,
+        name="session_report"
+    ),
+
 
 
 ]

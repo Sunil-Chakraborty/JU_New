@@ -196,6 +196,12 @@
 					📱 Show QR
 				</a>
 				
+				<a href="{% url 'instructor:session_report' s.id %}"
+				   style="color:#6f42c1;">
+				   📊 View Report
+				</a>
+
+				
 				{% if not s.questions.exists %}
 					<a href="{% url 'instructor:delete_session' s.id %}"
 					   style="color:#e53935;"

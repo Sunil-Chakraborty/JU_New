@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.wrap{max-width:950px;margin:40px auto;font-family:Roboto}
+.card{background:#fff;padding:24px;border-radius:12px;margin-bottom:20px;box-shadow:0 3px 12px rgba(0,0,0,.08)}
+.qtitle{font-weight:600;margin-bottom:14px;font-size:18px;color:#202124}
+.bar{height:12px;background:#e8f0fe;border-radius:8px;margin-top:6px}
+.fill{height:12px;background:#1a73e8;border-radius:8px}
+.labelrow{display:flex;justify-content:space-between;margin-top:8px}
+.percent{color:#5f6368}
+.comment{padding:10px 14px;background:#f8f9fa;border-radius:8px;margin-bottom:8px}
+.avg{font-size:24px;color:#fbbc04;font-weight:600}
+.total{color:#5f6368;font-size:13px;margin-top:6px}
+</style>
+
+<div class="wrap">
+
+
+<div class="card" style="background:#f1f5ff;border-left:6px solid #1a73e8">
+	<h2>{{ session.title }} — Feedback Report</h2>
+    
+
+    <div style="margin-top:8px;color:#333">
+        👨‍🏫 <strong>Teacher:</strong> {{ teacher_name }}
+    </div>
+
+    <div style="margin-top:4px;color:#333">
+        🏫 <strong>Department:</strong> {{ department_name }}
+    </div>
+
+    <div style="margin-top:4px;color:#333">
+        📅 <strong>Session Date:</strong>
+        {{ session.scheduled_at|default:session.created_at|date:"d M Y, h:i A" }}
+    </div>
+
+</div>
+
+{% for q in report %}
+<div class="card">
+
+<div class="qtitle">{{ forloop.counter }}. {{ q.question.text }}</div>
+
+<!-- RATING -->
+{% if q.type == "rating" %}
+<div class="avg">⭐ {{ q.average }}/5</div>
+<div class="total">{{ q.total }} students responded</div>
+
+<!-- COMMENTS -->
+{% elif q.type == "text" %}
+{% for c in q.comments %}
+<div class="comment">{{ c.answer_text }}</div>
+{% empty %}
+<div>No written feedback</div>
+{% endfor %}
+
+<!-- CHOICE QUESTIONS -->
+{% else %}
+{% for opt in q.options %}
+<div class="labelrow">
+<span>{{ opt.label }}</span>
+<span class="percent">{{ opt.count }} students ({{ opt.percent }}%)</span>
+</div>
+<div class="bar">
+<div class="fill" style="width:{{ opt.percent }}%"></div>
+</div>
+{% endfor %}
+<div class="total">{{ q.total }} students answered</div>
+
+{% endif %}
+
+</div>
+{% endfor %}
+
+</div>
+
+{% endblock %}
