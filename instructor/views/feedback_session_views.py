@@ -1,12 +1,19 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseForbidden,  JsonResponse
+from django.http import HttpResponseForbidden,  JsonResponse, HttpResponse
 
 from instructor.models.question_models import FeedbackSession, Question, Option
 from instructor.models.teacher import Teacher
+from instructor.models.response_models import Answer
+
+from django.template.loader import render_to_string
+from weasyprint import HTML, CSS
+from instructor.utils.report_builder import build_report_data
+from django.conf import settings
+import os
 
 from instructor.forms import FeedbackSessionForm   # 👈 CLEAN IMPORT
-from django.http import JsonResponse
+
 from django.db.models import Count, Avg, FloatField
 from django.db.models.functions import Cast
 
@@ -17,8 +24,6 @@ from io import BytesIO
 
 from django.utils import timezone
 from django.urls import reverse
-
-from instructor.models.response_models import Answer
 
 
 
@@ -201,22 +206,16 @@ def live_response_counts(request):
 def session_report(request, session_id):
 
     session = get_object_or_404(FeedbackSession, id=session_id)
+    report = build_report_data(session)
 
     # ---------- FETCH TEACHER PROFILE ----------
     teacher_profile = getattr(session.teacher, "teacher_profile", None)
 
-    teacher_name = "Unknown"
-    department_name = "Not Assigned"
-
-    if teacher_profile:
-        teacher_name = teacher_profile.first_name or session.teacher.username
-
-        if teacher_profile.department:
-            department_name = teacher_profile.department.name
-        elif teacher_profile.dept_name:
-            department_name = teacher_profile.dept_name
-
-    # ------------------------------------------
+    teacher_name = teacher_profile.first_name if teacher_profile else "Unknown"
+    department_name = (
+        teacher_profile.department.name
+        if teacher_profile and teacher_profile.department else "Not Assigned"
+    )
 
     report = []
 
@@ -296,10 +295,39 @@ def session_report(request, session_id):
                 "options": option_data,
                 "total": total
             })
-
+    
     return render(request, "instructor/report.html", {
         "session": session,
         "report": report,
         "teacher_name": teacher_name,
         "department_name": department_name,
     })
+
+
+def export_report_pdf(request, session_id):
+
+    #session = get_object_or_404(FeedbackSession, id=session_id)
+    session = get_object_or_404(FeedbackSession, id=session_id, teacher=request.user)
+
+    report = build_report_data(session)
+    
+    context = {
+        "session": session,
+        "report": report,
+        "teacher_name": session.teacher.teacher_profile.first_name,
+        "department_name": getattr(session.teacher.teacher_profile, "department", ""),
+        "is_pdf": True,   # used to hide buttons
+    }
+    
+    html_string = render_to_string(
+        "instructor/report.html",        
+            context,
+    
+    )
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = f'attachment; filename="session_{session_id}_report.pdf"'
+
+    HTML(string=html_string, base_url=request.build_absolute_uri("/")).write_pdf(response)
+
+    return response

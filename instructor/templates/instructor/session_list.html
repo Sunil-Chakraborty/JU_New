@@ -2,24 +2,199 @@
 {% block content %}
 
 <style>
-    .wrapper {
-        max-width: 900px;
-        margin: 40px auto;
+    :root {<title>{% block title %}Feedback Portal{% endblock %}</title>
+        --primary: #4f46e5;
+        --primary-hover: #4338ca;
+        --success: #10b981;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+        --bg-body: #f8fafc;
+        --text-main: #1e293b;
+        --text-muted: #64748b;
+        --card-bg: #ffffff;
     }
 
-    .header {
+    body {
+        background-color: var(--bg-body);
+        font-family: 'Inter', -apple-system, sans-serif;
+    }
+
+    .wrapper {
+        max-width: 850px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    /* Header Section */
+    .header-nav {
+        margin-bottom: 1.5rem;
+    }
+
+    .back-link {
+        text-decoration: none;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        transition: color 0.2s;
+    }
+
+    .back-link:hover {
+        color: var(--primary);
+    }
+
+    .header-main {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 20px;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 1rem;
     }
 
     h2 {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: var(--text-main);
         margin: 0;
-        color: #202124;
     }
 
-    .create-btn {
+   
+
+    /* Session Cards */
+    .card {
+        background: var(--card-bg);
+        border: 1px solid #e2e8f0;
+        padding: 1.5rem;
+        border-radius: 16px;
+        margin-bottom: 1.25rem;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    }
+
+    .session-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+
+    .session-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--text-main);
+        display: block;
+    }
+
+    .session-meta {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        display: block;
+        margin-top: 0.25rem;
+    }
+
+    .response-badge {
+        background: #f1f5f9;
+        color: var(--text-main);
+        padding: 0.35rem 0.75rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    /* Status Bar */
+    .status-bar {
+        display: flex;
+        align-items: center;
+        background: #f8fafc;
+        padding: 0.75rem 1rem;
+        border-radius: 12px;
+        margin-bottom: 1.25rem;
+        gap: 1rem;
+    }
+
+    .live-indicator {
+        font-size: 0.85rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .dot {
+        height: 8px;
+        width: 8px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .dot-open { background-color: var(--success); box-shadow: 0 0 8px var(--success); }
+    .dot-closed { background-color: var(--danger); }
+
+    /* Action Links */
+    .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        border-top: 1px solid #f1f5f9;
+        padding-top: 1.25rem;
+    }
+
+    .action-link {
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-decoration: none;
+        color: var(--text-muted);
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+        transition: all 0.2s;
+        border: 1px solid #e2e8f0;
+    }
+
+    .action-link:hover {
+        background: #f1f5f9;
+        color: var(--primary);
+    }
+
+    .action-link.delete:hover {
+        color: var(--danger);
+        background: #fef2f2;
+        border-color: #fee2e2;
+    }
+
+    /* Controls */
+    .control-btn {
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        text-decoration: none;
+        font-weight: 700;
+        margin-left: auto; /* Push to right in flex */
+    }
+
+    .open-btn { background: #dcfce7; color: #166534; }
+    .close-btn { background: #fee2e2; color: #991b1b; }
+
+    /* Mobile Responsive Adjustments */
+    @media (max-width: 600px) {
+        .session-top { flex-direction: column; }
+        .response-badge { margin-top: 0.75rem; }
+        .status-bar { flex-wrap: wrap; }
+        .control-btn { width: 100%; text-align: center; margin-left: 0; }
+        .action-link { flex: 1 1 40%; text-align: center; }
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: 16px;
+        border: 2px dashed #e2e8f0;
+        color: var(--text-muted);
+    }
+	.create-btn {
         background: #1a73e8;
         color: #fff;
         padding: 10px 16px;
@@ -27,102 +202,17 @@
         text-decoration: none;
         font-size: 14px;
     }
-
-    .card {
-        background: #fff;
-        padding: 18px 22px;
-        border-radius: 8px;
-        box-shadow: 0 2px 6px rgba(0,0,0,.12);
-        margin-bottom: 15px;
-    }
-
-    .title {
-        font-weight: 600;
-        font-size: 16px;
-        margin-bottom: 8px;
-    }
-
-    .actions a {
-        margin-right: 15px;
-        text-decoration: none;
-        font-size: 14px;
-        color: #1a73e8;
-    }
-
-    .actions a.student {
-        color: #0f9d58;
-    }
-
-    .empty {
-        background: #f8f9fa;
-        padding: 20px;
-        border-radius: 6px;
-        color: #666;
-    }
-	.actions a.qr {
-		color: #1a73e8;
-		font-weight: 500;
-	}
-	
-	.session-meta {
-		display: flex;
-		justify-content: space-between;
-		margin-top: 6px;
-		font-size: 14px;
-		color: #555;
-	}
-
-	.session-count {
-		background: #eef6ff;
-		color: #0b5ed7;
-		padding: 4px 10px;
-		border-radius: 20px;
-		font-weight: 600;
-		font-size: 13px;
-	}
-
-	.session-count::before {
-		content: "📊 ";
-	}
-
-	.control-btn{
-		margin-left:12px;
-		padding:5px 12px;
-		border-radius:20px;
-		font-size:13px;
-		text-decoration:none;
-		font-weight:600;
-		border:1px solid transparent;
-	}
-
-	.open-btn{
-		background:#e6f4ea;
-		color:#137333;
-		border-color:#34a853;
-	}
-
-	.close-btn{
-		background:#fce8e6;
-		color:#c5221f;
-		border-color:#ea4335;
-	}	
-
-	.control-btn:hover{
-		opacity:.85;
-	}
-
 </style>
 
 <div class="wrapper">
+    <div class="header-nav">
+        <a href="{% url 'instructor:dashboard' %}" class="back-link">
+            ← Back to Dashboard
+        </a>
+    </div>
 
-    <div class="header">
-	
-			<a href="{% url 'instructor:dashboard' %}" class="back-link">
-				← Back to Dashboard
-			</a>
-			
-        <h2>Your Feedback Sessions</h2>
-
+    <div class="header-main">
+        <h2>Feedback Sessions</h2>
         <a href="{% url 'instructor:create_feedback_session' %}" class="create-btn">
             + New Session
         </a>
@@ -130,147 +220,139 @@
 
     {% for s in sessions %}
         <div class="card">
-		
-			
-            <div class="session-title">
-				{{ s.title }}
-				
-				<span class="session-meta">
-					· {{ s.created_at|date:"d M Y, h:i A" }}
-				</span>
-				
-				<span class="response-count" id="count-{{ s.id }}">
-					👥 {{ s.response_count }} Responses
-				</span>
+            <div class="session-top">
+                <div>
+                    <span class="session-title">{{ s.title }}</span>
+                    Created {{ s.created_at|date:"d M Y, h:i A" }}
+                </div>
+                <span class="response-badge" id="count-{{ s.id }}">
+                    📊 {{ s.response_count }} Responses
+                </span>
+            </div>
 
+            <div class="status-bar">
+                <span class="live-indicator" id="present-{{ s.id }}">
+                    👤 0 Present
+                </span>
+                <span class="live-indicator" id="status-{{ s.id }}">
+                    {% if s.feedback_open %}
+                        <span class="dot dot-open"></span> Open
+                    {% else %}
+                        <span class="dot dot-closed"></span> Closed
+                    {% endif %}
+                </span>
 
-			</div>
-			
-			<div class="session-live" style="margin-top:8px; font-size:14px;">
-
-				<span id="present-{{ s.id }}">
-					👥 0 Present
-				</span>
-
-				&nbsp;|&nbsp;
-
-				<span id="status-{{ s.id }}">
-					{% if s.feedback_open %}
-						🟢 Feedback Open
-					{% else %}
-						🔴 Closed
-					{% endif %}
-				</span>
-
-				{% if s.feedback_open %}
-					<a href="{% url 'instructor:toggle_feedback' s.id %}"
-					   class="control-btn close-btn">
-					   ⛔ Close
-					</a>
-				{% else %}
-					<a href="{% url 'instructor:toggle_feedback' s.id %}"
+                {% if s.feedback_open %}
+                    <a href="{% url 'instructor:toggle_feedback' s.id %}" class="control-btn close-btn">
+                       Stop Session
+                    </a>
+                {% else %}
+                    <a href="{% url 'instructor:toggle_feedback' s.id %}"
 					   class="control-btn open-btn">
-					   ▶ Start
+					   ▶ Start Session
 					</a>
-				{% endif %}
-
-			</div>
-
-
-
+                {% endif %}
+            </div>
 
             <div class="actions">
-                <a href="{% url 'instructor:create_question' s.id %}">
-                    ✏ Add / Edit Questions
+                <a class="action-link" href="{% url 'instructor:create_question' s.id %}">
+                    ✏️ Questions
                 </a>
-
-                <a href="{% url 'instructor:student_feedback' s.id %}"
-                   class="student"
-                   target="_blank">
+                <a class="action-link" href="{% url 'instructor:student_feedback' s.id %}" target="_blank">
                     🔗 Student Link
                 </a>
-				
-				<a href="{% url 'instructor:generate_qr' s.id %}"
-				   style="color:#1a73e8;"
-				   target="_blank">
-					📱 Show QR
-				</a>
-				
-				<a href="{% url 'instructor:session_report' s.id %}"
-				   style="color:#6f42c1;">
-				   📊 View Report
-				</a>
-
-				
-				{% if not s.questions.exists %}
-					<a href="{% url 'instructor:delete_session' s.id %}"
-					   style="color:#e53935;"
-					   onclick="return confirm(
-						   'Delete this feedback session? This cannot be undone.'
-					   );">
-						🗑 Delete
-					</a>
-				{% endif %}
-				
-				
+                <a class="action-link" href="{% url 'instructor:generate_qr' s.id %}" target="_blank">
+                    📱 QR Code
+                </a>
+                <a class="action-link" href="{% url 'instructor:session_report' s.id %}" target="_blank" style="color: var(--primary);">
+                   📈 Report
+                </a>
+                {% if not s.questions.exists %}
+                    <a class="action-link delete" href="{% url 'instructor:delete_session' s.id %}" 
+                       onclick="return confirm('Delete session?');">
+                        🗑️ Delete
+                    </a>
+                {% endif %}
             </div>
         </div>
     {% empty %}
-        <div class="empty">
-            No feedback sessions created yet.
+        <div class="empty-state">
+            <p>No active sessions found. Click "New Session" to get started.</p>
         </div>
     {% endfor %}
-
 </div>
-	<script>
-		function updateLiveAttendance(){
 
-			fetch("{% url 'instructor:live_attendance_counts' %}")
+<script>
+	let liveTimer = null;
+
+	// check if any session is open in page DOM
+	function hasOpenSession() {
+		const statusElements = document.querySelectorAll("[id^='status-']");
+		for (const el of statusElements) {
+			if (el.innerText.includes("Open")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// update stats
+	function updateLiveStats() {
+
+		// if no open sessions → stop polling
+		if (!hasOpenSession()) {
+			if (liveTimer) {
+				clearInterval(liveTimer);
+				liveTimer = null;
+				console.log("Polling stopped — all sessions closed");
+			}
+			return;
+		}
+
+		// Attendance
+		fetch("{% url 'instructor:live_attendance_counts' %}")
 			.then(res => res.json())
 			.then(data => {
+				for (const id in data) {
 
-				for(const id in data){
+					const presentEl = document.getElementById("present-" + id);
+					if (presentEl)
+						presentEl.innerHTML = `👤 ${data[id].present} Present`;
 
-					// update present count
-					const presentEl = document.getElementById("present-"+id);
-					if(presentEl){
-						presentEl.innerText = "👥 " + data[id].present + " Present";
-					}
+					const statusEl = document.getElementById("status-" + id);
+					if (statusEl) {
+						const statusDot = data[id].open
+							? '<span class="dot dot-open"></span> Open'
+							: '<span class="dot dot-closed"></span> Closed';
 
-					// update open/close status
-					const statusEl = document.getElementById("status-"+id);
-					if(statusEl){
-						statusEl.innerText = data[id].open ? "🟢 Feedback Open" : "🔴 Closed";
+						statusEl.innerHTML = statusDot;
 					}
 				}
 			});
-		}
 
-		// every 5 sec
-		setInterval(updateLiveAttendance, 5000);
-		updateLiveAttendance();
-	</script>
-
-	<script>
-	function updateResponseCounts(){
-
+		// Responses
 		fetch("{% url 'instructor:live_response_counts' %}")
-		.then(res => res.json())
-		.then(data => {
-
-			for(const id in data){
-
-				const el = document.getElementById("count-"+id);
-				if(el){
-					el.innerText = "👥 " + data[id].responses + " Responses";
+			.then(res => res.json())
+			.then(data => {
+				for (const id in data) {
+					const el = document.getElementById("count-" + id);
+					if (el)
+						el.innerText = `📊 ${data[id].responses} Responses`;
 				}
-			}
-		});
+			});
 	}
 
-	// run every 5 seconds
-	setInterval(updateResponseCounts, 5000);
-	updateResponseCounts();
-	</script>
+	// start polling only if needed
+	function initLivePolling() {
+		if (hasOpenSession()) {
+			updateLiveStats();
+			liveTimer = setInterval(updateLiveStats, 5000);
+			console.log("Polling started");
+		}
+	}
+
+	// run once on page load
+	document.addEventListener("DOMContentLoaded", initLivePolling);
+</script>
 
 {% endblock %}

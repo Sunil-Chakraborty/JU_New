@@ -1,99 +1,353 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instructor Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+
     <style>
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --navy: #1e3c72;
+            --blue: #2a5298;
+            --blue-light: #3a6fd8;
+            --accent: #f0a500;
+            --bg: #f0f3f9;
+            --white: #ffffff;
+            --text: #1a2340;
+            --muted: #6b7a99;
+            --card-shadow: 0 4px 24px rgba(30, 60, 114, 0.10);
+            --radius: 14px;
         }
 
         body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f9;
+            font-family: 'DM Sans', Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
         }
 
         /* ===== TOP BAR ===== */
         .topbar {
-            height: 55px;
-            background-color: #000;
+            height: 62px;
+            background: linear-gradient(90deg, var(--navy), var(--blue));
             color: #fff;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
+            padding: 0 24px;
+            box-shadow: 0 2px 12px rgba(30,60,114,0.18);
+            position: sticky;
+            top: 0;
+            z-index: 200;
         }
 
-        .topbar .brand {
-            font-size: 18px;
-            font-weight: bold;
+        .brand {
+            font-family: 'DM Serif Display', serif;
+            font-size: 21px;
+            letter-spacing: 0.3px;
         }
 
-        .topbar .top-actions a,
-        .topbar .top-actions button {
+        .menu-toggle {
+            display: none;
+            font-size: 26px;
+            cursor: pointer;
             color: #fff;
-            background: none;
-            border: none;
-            margin-left: 15px;
+            user-select: none;
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .top-actions a,
+        .top-actions button {
+            color: rgba(255,255,255,0.88);
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 8px;
+            padding: 6px 14px;
             cursor: pointer;
             font-size: 14px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
             text-decoration: none;
+            transition: background 0.2s, color 0.2s;
         }
 
-        .topbar .top-actions a:hover,
-        .topbar .top-actions button:hover {
-            text-decoration: underline;
+        .top-actions a:hover,
+        .top-actions button:hover {
+            background: rgba(255,255,255,0.24);
+            color: #fff;
         }
 
         /* ===== LAYOUT ===== */
         .layout {
             display: flex;
-            min-height: calc(100vh - 55px);
+            min-height: calc(100vh - 62px);
         }
 
         /* ===== SIDEBAR ===== */
         .sidebar {
-            width: 220px;
-            background-color: #222;
-            color: #fff;
-            padding-top: 20px;
+            width: 250px;
+            background-color: var(--white);
+            padding: 28px 0 20px;
+            box-shadow: 2px 0 16px rgba(0,0,0,0.06);
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
         }
 
         .sidebar h3 {
-            padding: 0 20px;
-            margin-bottom: 10px;
-            font-size: 14px;
-            color: #bbb;
+            padding: 0 24px;
+            margin-bottom: 14px;
+            font-size: 11px;
+            color: var(--muted);
             text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-weight: 600;
         }
 
         .sidebar a {
-            display: block;
-            padding: 12px 20px;
-            color: #ddd;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 4px 14px;
+            padding: 12px 16px;
+            border-radius: 10px;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text);
+            transition: background 0.18s, color 0.18s, transform 0.18s;
+        }
+
+        .sidebar a .nav-icon {
+            font-size: 17px;
+            width: 24px;
+            text-align: center;
+            flex-shrink: 0;
         }
 
         .sidebar a:hover {
-            background-color: #333;
+            background: linear-gradient(90deg, var(--navy), var(--blue));
             color: #fff;
+            transform: translateX(4px);
         }
 
         /* ===== MAIN CONTENT ===== */
         .content {
             flex: 1;
-            padding: 30px;
+            padding: 36px 36px 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
         }
 
-        .card {
-            background: #fff;
-            padding: 25px;
-            border-radius: 6px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        /* ===== WELCOME CARD ===== */
+        .welcome-card {
+            background: linear-gradient(120deg, var(--navy) 0%, var(--blue) 60%, var(--blue-light) 100%);
+            border-radius: var(--radius);
+            padding: 34px 36px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 8px 32px rgba(30,60,114,0.22);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-card::before {
+            content: '';
+            position: absolute;
+            right: -60px;
+            top: -60px;
+            width: 220px;
+            height: 220px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 50%;
+        }
+
+        .welcome-card::after {
+            content: '';
+            position: absolute;
+            right: 60px;
+            bottom: -80px;
+            width: 180px;
+            height: 180px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 50%;
+        }
+
+        .welcome-text h2 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 26px;
+            margin-bottom: 6px;
+            font-weight: 400;
+        }
+
+        .welcome-text p {
+            font-size: 15px;
+            opacity: 0.82;
+        }
+
+        .welcome-badge {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 50px;
+            padding: 8px 20px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        /* ===== SECTION TITLE ===== */
+        .section-label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.3px;
+            color: var(--muted);
+            margin-bottom: 4px;
+        }
+
+        /* ===== QUICK ACTIONS GRID ===== */
+        .quick-nav {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 18px;
+        }
+
+        .nav-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 26px 22px 22px;
+            text-decoration: none;
+            color: var(--text);
+            box-shadow: var(--card-shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+            border: 1.5px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--navy), var(--blue-light));
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(30,60,114,0.16);
+            border-color: rgba(42,82,152,0.15);
+        }
+
+        .nav-card:hover::after {
+            opacity: 1;
+        }
+
+        .nav-card-icon {
+            font-size: 28px;
+            line-height: 1;
+            background: var(--bg);
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-card-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+            line-height: 1.3;
+        }
+
+        .nav-card-desc {
+            font-size: 12.5px;
+            color: var(--muted);
+            line-height: 1.4;
+        }
+
+        .nav-card-arrow {
+            margin-top: auto;
+            font-size: 18px;
+            color: var(--blue);
+            opacity: 0;
+            transform: translateX(-4px);
+            transition: opacity 0.2s, transform 0.2s;
+        }
+
+        .nav-card:hover .nav-card-arrow {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* ===== MOBILE RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 62px;
+                left: 0;
+                height: 100%;
+                transform: translateX(-100%);
+                z-index: 1000;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .layout {
+                flex-direction: column;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .welcome-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+                padding: 26px 22px;
+            }
+
+            .quick-nav {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .quick-nav {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -103,6 +357,7 @@
 
 <!-- TOP BAR -->
 <div class="topbar">
+    <div class="menu-toggle" onclick="toggleMenu()">&#9776;</div>
     <div class="brand">Instructor Portal</div>
 
     <div class="top-actions">
@@ -119,29 +374,99 @@
 <div class="layout">
 
     <!-- SIDEBAR -->
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <h3>Menu</h3>
 
-              
-		<a href="{% url 'instructor:teacher_detail' %}">My Profile</a>
-        <a href="#">Students</a>
-        		
-		<a href="{% url 'instructor:create_feedback_session' %}">Create Feedback Session</a>
-
-		<a href="{% url 'instructor:feedback_sessions_list' %}">My Feedback Sessions</a>		
-        <a href="#">Reports</a>
-        <a href="#">Settings</a>
+        <a href="{% url 'instructor:teacher_detail' %}">
+            <span class="nav-icon">👤</span> My Profile
+        </a>
+        <a href="#">
+            <span class="nav-icon">🎓</span> Students
+        </a>
+        <a href="{% url 'instructor:create_feedback_session' %}">
+            <span class="nav-icon">📝</span> Create Feedback Session
+        </a>
+        <a href="{% url 'instructor:feedback_sessions_list' %}">
+            <span class="nav-icon">📋</span> My Feedback Sessions
+        </a>
+        <a href="#">
+            <span class="nav-icon">⚙</span> Settings
+        </a>
     </div>
 
     <!-- MAIN CONTENT -->
     <div class="content">
-        <div class="card">
-            <h2>Welcome, {{ user.email }}</h2>
-            <p>You have successfully logged in to the Instructor Portal.</p>
-        </div>
-    </div>
 
+        <!-- WELCOME CARD -->
+        <div class="welcome-card">
+            <div class="welcome-text">
+                <h2>Welcome back, {{ user.email }}</h2>
+                <p>You're logged in to the Instructor Portal. What would you like to do today?</p>
+            </div>
+            <div class="welcome-badge">Instructor</div>
+        </div>
+
+        <!-- QUICK NAVIGATION -->
+        <div>
+            <div class="section-label">Quick Navigation</div>
+            <div class="quick-nav">
+
+                <a class="nav-card" href="{% url 'instructor:teacher_detail' %}">
+                    <div class="nav-card-icon">👤</div>
+                    <div>
+                        <div class="nav-card-title">My Profile</div>
+                        <div class="nav-card-desc">View and manage your instructor profile</div>
+                    </div>
+                    <div class="nav-card-arrow">→</div>
+                </a>
+
+                <a class="nav-card" href="#">
+                    <div class="nav-card-icon">🎓</div>
+                    <div>
+                        <div class="nav-card-title">Students</div>
+                        <div class="nav-card-desc">Browse and manage your student list</div>
+                    </div>
+                    <div class="nav-card-arrow">→</div>
+                </a>
+
+                <a class="nav-card" href="{% url 'instructor:create_feedback_session' %}">
+                    <div class="nav-card-icon">📝</div>
+                    <div>
+                        <div class="nav-card-title">Create Feedback Session</div>
+                        <div class="nav-card-desc">Start a new session to collect feedback</div>
+                    </div>
+                    <div class="nav-card-arrow">→</div>
+                </a>
+
+                <a class="nav-card" href="{% url 'instructor:feedback_sessions_list' %}">
+                    <div class="nav-card-icon">📋</div>
+                    <div>
+                        <div class="nav-card-title">My Feedback Sessions</div>
+                        <div class="nav-card-desc">Review all your past and active sessions</div>
+                    </div>
+                    <div class="nav-card-arrow">→</div>
+                </a>
+
+                <a class="nav-card" href="#">
+                    <div class="nav-card-icon">⚙️</div>
+                    <div>
+                        <div class="nav-card-title">Settings</div>
+                        <div class="nav-card-desc">Adjust your preferences and account settings</div>
+                    </div>
+                    <div class="nav-card-arrow">→</div>
+                </a>
+
+            </div>
+        </div>
+
+    </div>
 </div>
+
+<script>
+function toggleMenu() {
+    document.getElementById("sidebar").classList.toggle("active");
+}
+</script>
 
 {% else %}
 <p style="padding:20px;">Unauthorized access</p>

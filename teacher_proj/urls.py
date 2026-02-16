@@ -26,6 +26,10 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", home, name="home"),          # 👈 NEW
     path("instructor/", include("instructor.urls")),
+    path("tracker/", include("tracker.urls")),
+    
+    path("", include("instructor.urls_location")),
+    
 ]
 
 if settings.DEBUG:

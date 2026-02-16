@@ -9,6 +9,7 @@ from django.urls import path
 from instructor.views.registration_views import register
 from instructor.views.auth_views import login_view, logout_view
 from instructor.views.otp_views import verify_otp
+from instructor.views.location_views import standard_location, straight_route_map
 
 from instructor.views.password_views import (
     set_password,
@@ -149,7 +150,16 @@ urlpatterns += [
         feedback_session_views.session_report,
         name="session_report"
     ),
+    
+    path("location/", standard_location, name="standard_location"),
+    path("route/", straight_route_map, name="straight_route_map"),
 
+    path(
+        "feedback/session/<int:session_id>/report/pdf/",
+        feedback_session_views.export_report_pdf,
+        name="export_report_pdf"
+    ),
+    
 
 
 ]

@@ -1,0 +1,7 @@
+<h2>QR Analytics</h2>
+
+{% for link in links %}
+<h3>{{ link.name }}</h3>
+Total Clicks: {{ link.clicks.count }}
+<hr>
+{% endfor %}

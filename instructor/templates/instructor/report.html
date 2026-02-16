@@ -1,6 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
 
+<title>{% block title %}Report Portal{% endblock %}</title>
+
+{% if is_pdf %}
+
+<style>
+/* Hide UI elements in PDF */
+.navbar, .sidebar, .create-btn { display:none !important; }
+
+/* Better print layout */
+body{ margin:25px; background:#fff; }
+.wrap{margin:0 auto;}
+.card{page-break-inside:avoid;}
+</style>
+
+{% endif %}
+
 <style>
 .wrap{max-width:950px;margin:40px auto;font-family:Roboto}
 .card{background:#fff;padding:24px;border-radius:12px;margin-bottom:20px;box-shadow:0 3px 12px rgba(0,0,0,.08)}
@@ -12,51 +28,87 @@
 .comment{padding:10px 14px;background:#f8f9fa;border-radius:8px;margin-bottom:8px}
 .avg{font-size:24px;color:#fbbc04;font-weight:600}
 .total{color:#5f6368;font-size:13px;margin-top:6px}
+
+.star-rating{
+    font-size:26px;
+    font-weight:600;
+    letter-spacing:3px;
+}
+
+.star{ color:#dadce0; }
+.star.full{ color:#fbbc04; }
+
+.star.half{
+    background: linear-gradient(90deg,#fbbc04 50%,#dadce0 50%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
 </style>
 
 <div class="wrap">
 
-
 <div class="card" style="background:#f1f5ff;border-left:6px solid #1a73e8">
-	<h2>{{ session.title }} — Feedback Report</h2>
-    
+    <h2>{{ session.title }} — Feedback Report <br>
+	
+	<a href="{% url 'instructor:export_report_pdf' session.id %} "
+	   class="create-btn">
+	   <span class="icon">⬇</span>
+	   <span>Download PDF Report</span>
+	</a>
+	</h2>
 
-    <div style="margin-top:8px;color:#333">
-        👨‍🏫 <strong>Teacher:</strong> {{ teacher_name }}
-    </div>
+<div style="margin-top:8px;color:#333">
+    <strong>Teacher:</strong> {{ teacher_name }}
+</div>
 
-    <div style="margin-top:4px;color:#333">
-        🏫 <strong>Department:</strong> {{ department_name }}
-    </div>
+<div style="margin-top:4px;color:#333">
+    <strong>Department:</strong> {{ department_name }}
+</div>
 
-    <div style="margin-top:4px;color:#333">
-        📅 <strong>Session Date:</strong>
-        {{ session.scheduled_at|default:session.created_at|date:"d M Y, h:i A" }}
-    </div>
+<div style="margin-top:4px;color:#333">
+    <strong>Session Date:</strong>
+    {{ session.scheduled_at|default:session.created_at|date:"d M Y, h:i A" }}
+</div>
+
 
 </div>
 
 {% for q in report %}
+
 <div class="card">
 
 <div class="qtitle">{{ forloop.counter }}. {{ q.question.text }}</div>
 
 <!-- RATING -->
+
 {% if q.type == "rating" %}
+
+<div class="avg">
+<div class="star-rating">
+
 <div class="avg">⭐ {{ q.average }}/5</div>
+
+</div>
+</div>
+
 <div class="total">{{ q.total }} students responded</div>
 
 <!-- COMMENTS -->
+
 {% elif q.type == "text" %}
 {% for c in q.comments %}
+
 <div class="comment">{{ c.answer_text }}</div>
+
 {% empty %}
 <div>No written feedback</div>
 {% endfor %}
 
-<!-- CHOICE QUESTIONS -->
+<!-- CHOICE -->
+
 {% else %}
 {% for opt in q.options %}
+
 <div class="labelrow">
 <span>{{ opt.label }}</span>
 <span class="percent">{{ opt.count }} students ({{ opt.percent }}%)</span>
@@ -66,12 +118,12 @@
 </div>
 {% endfor %}
 <div class="total">{{ q.total }} students answered</div>
-
 {% endif %}
 
 </div>
 {% endfor %}
 
 </div>
+
 
 {% endblock %}

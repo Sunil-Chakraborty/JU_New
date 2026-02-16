@@ -53,6 +53,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',    
     'instructor.apps.InstructorConfig',
     
+    'tracker.apps.TrackerConfig',
+    
+    
+    
     
 ]
 
@@ -149,10 +153,10 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [BASE_DIR / "static"]  # Update this path if your static files are in a custom directory
 
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+SITE_URL = "https://jadavpuruniversity.in/storage/2026/01/IQAC-Newsletter_December-2025.pdf"
 
 # Or make the session expire when the browser is closed
 # SESSION_EXPIRE_AT_BROWSER_CLOSE = True

@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>site_location Direction Guide</title>
+    <style>
+        #map{
+            height:620px;
+            width:100%;
+            border-radius:14px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Harahari Temple ➜ EM Bypass Direction</h2>
+<div id="map"></div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9rGI7puSG5CZXAaooSO9oQFBj7KWzCGI"></script>
+
+<script>
+function initMap(){
+
+    // START: Harahari Temple
+    const start = {lat:22.4098, lng:88.4112};
+
+    // END: EM Bypass
+    const end = {lat:22.4260, lng:88.4235};
+
+    const map = new google.maps.Map(document.getElementById("map"),{
+        zoom:15,
+        center:start,
+        mapTypeId:'roadmap'
+    });
+
+    // markers
+    new google.maps.Marker({position:start,map,title:"Harahari Temple"});
+    new google.maps.Marker({position:end,map,title:"EM Bypass"});
+
+    // straight path line
+    const routeLine = new google.maps.Polyline({
+        path:[start,end],
+        strokeColor:"#0066ff",
+        strokeOpacity:1,
+        strokeWeight:5
+    });
+    routeLine.setMap(map);
+
+    // -------- AUTO GENERATE SIGNBOARDS --------
+    function interpolatePoint(p1,p2,t){
+        return {
+            lat: p1.lat + (p2.lat - p1.lat)*t,
+            lng: p1.lng + (p2.lng - p1.lng)*t
+        };
+    }
+
+    // number of boards
+    const boardCount = 1;
+
+    for(let i=1;i<boardCount;i++){
+        const pos = interpolatePoint(start,end,i/boardCount);
+
+        new google.maps.Marker({
+            position:pos,
+            map:map,
+            icon:{
+                url:"{% static 'images/signboard.png' %}",
+                scaledSize:new google.maps.Size(70,70)
+            }
+        });
+    }
+}
+
+window.onload = initMap;
+</script>
+
+</body>
+</html>
