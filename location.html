@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My GPS Location</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f6f9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .card {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        width: 420px;
+        text-align: center;
+    }
+
+    h2 {
+        margin-top: 0;
+        color: #333;
+    }
+
+    button {
+        padding: 10px 18px;
+        border: none;
+        background: #007bff;
+        color: white;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 15px;
+    }
+
+    button:hover {
+        background: #0056b3;
+    }
+
+    .result {
+        margin-top: 20px;
+        text-align: left;
+        background: #f1f1f1;
+        padding: 12px;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2>📍 Trace My Location</h2>
+
+    <button onclick="getLocation()">Get Current Location</button>
+
+    <div class="result" id="output">
+        Click the button to detect location.
+    </div>
+</div>
+
+<script>
+function getLocation() {
+
+    const output = document.getElementById("output");
+
+    if (!navigator.geolocation) {
+        output.innerHTML = "Geolocation is not supported by this browser.";
+        return;
+    }
+
+    output.innerHTML = "Detecting location...";
+
+    navigator.geolocation.getCurrentPosition(
+        function(position) {
+
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            const accuracy = position.coords.accuracy;
+
+            output.innerHTML = `
+                <b>Latitude:</b> ${lat}<br>
+                <b>Longitude:</b> ${lon}<br>
+                <b>Accuracy:</b> ${accuracy} meters<br><br>
+
+                <a href="https://www.google.com/maps?q=${lat},${lon}" target="_blank">
+                    Open in Google Maps
+                </a>
+            `;
+        },
+
+        function(error) {
+            output.innerHTML = "Error: " + error.message;
+        },
+
+        {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+        }
+    );
+}
+</script>
+
+</body>
+</html>
